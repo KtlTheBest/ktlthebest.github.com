@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta name="generator" content="Hugo 0.80.0" />
+	<meta name="generator" content="Hugo 0.101.0" />
   
     <title>Terminal</title>
   
@@ -9,22 +9,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="A simple, retro theme for Hugo" />
 <meta name="keywords" content="" />
-<meta name="robots" content="noodp" />
+
+  <meta name="robots" content="noodp" />
+
 <link rel="canonical" href="/" />
 
 
 
 
-<link rel="stylesheet" href="/assets/style.css">
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
 
 
 
 
 
 
-<link rel="apple-touch-icon" href="/img/apple-touch-icon-192x192.png">
 
-  <link rel="shortcut icon" href="/img/favicon/orange.png">
+  <link rel="shortcut icon" href="/img/theme-colors/orange.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/orange.png">
 
 
 
@@ -48,8 +57,8 @@
     <meta property="og:image" content="/img/favicon/orange.png">
   
 
-<meta property="og:image:width" content="2048">
-<meta property="og:image:height" content="1024">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
 
 
 
@@ -82,13 +91,10 @@
 
     </div>
     
-      <div class="menu-trigger">menu</div>
-    
-  </div>
-  
-    <nav class="menu">
-  <ul class="menu__inner menu__inner--desktop">
-    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
       
         
           <li><a href="/about">About</a></li>
@@ -99,21 +105,27 @@
         
       
       
-    
+    </ul>
+  </li>
+</ul>
 
     
-  </ul>
-
-  <ul class="menu__inner menu__inner--mobile">
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
     
       
-        <li><a href="/about">About</a></li>
+        
+          <li><a href="/about" >About</a></li>
+        
       
-    
+        
+          <li><a href="/showcase" >Showcase</a></li>
+        
       
-        <li><a href="/showcase">Showcase</a></li>
       
-    
     
   </ul>
 </nav>
@@ -136,44 +148,33 @@
     
 
     
-      <div class="post on-list">
+      <article class="post on-list">
         <h1 class="post-title">
-          <a href="/posts/first-post/">My Survey Paper</a>
+          <a href="/posts/so-you-want-to-ocaml/">So You Want to Ocaml</a>
         </h1>
-        <div class="post-meta">
-          <span class="post-date">
-            2022-05-21
-          </span>
-          
-        </div>
+
+        <div class="post-meta"><time class="post-date">2023-09-20</time></div>
 
         
 
-
         
-  <img src="/What%20is%20a%20cover"
-    class="post-cover"
-    alt="My Survey Paper"
-    title="Cover Image" />
-
 
 
         <div class="post-content">
           
-            Hello. In my 3rd year of studying at Nazarbayev University, I did a survey paper for a “Research Methods” course.
-This is my initial attempt at trying to write a paper. I was quite naive when writing it, but the experience proved to be priceless.
-The title of my paper is “Survey: Current Web Application Security trends in Cyber Security Attacks and the Difficulties of Implementing a NGFW to Defend Against Them”.
+            Introduction So, you might have heard that there&rsquo;s a language called OCaml, and that it is one of the affordable ways of getting into Functional Programming (the other one being F#, but this is a topic for another day).
+Pros of OCaml OCaml is a really good language. There&rsquo;s a saying that being copied is one best compliments that artist can get. Apparently for the programming language it is the same.
           
         </div>
 
         
-        <div>
-          <a class="read-more button"
-            href="/posts/first-post/">Read more →</a>
-        </div>
+          <div>
+            <a class="read-more button" href="/posts/so-you-want-to-ocaml/">Read more →</a>
+          </div>
         
-      </div>
+      </article>
     
+
     <div class="pagination">
   <div class="pagination__buttons">
     
@@ -190,17 +191,19 @@ The title of my paper is “Survey: Current Web Application Security trends in C
   <div class="footer__inner">
     
       <div class="copyright">
-        <span>© 2022 Powered by <a href="http://gohugo.io">Hugo</a></span>
+        <span>© 2023 Powered by <a href="https://gohugo.io">Hugo</a></span>
     
-        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
       </div>
   </div>
 </footer>
 
-<script src="/assets/main.js"></script>
-<script src="/assets/prism.js"></script>
 
 
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
 
 
 
