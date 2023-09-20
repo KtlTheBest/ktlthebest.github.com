@@ -6,21 +6,186 @@
     <description>Recent content in Posts on Terminal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 May 2022 14:50:44 +0600</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 20 Sep 2023 17:24:15 +0900</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>My Survey Paper</title>
-      <link>/posts/first-post/</link>
-      <pubDate>Sat, 21 May 2022 14:50:44 +0600</pubDate>
+      <title>So You Want to Ocaml</title>
+      <link>/posts/so-you-want-to-ocaml/</link>
+      <pubDate>Wed, 20 Sep 2023 17:24:15 +0900</pubDate>
       
-      <guid>/posts/first-post/</guid>
-      <description>Hello. In my 3rd year of studying at Nazarbayev University, I did a survey paper for a &amp;ldquo;Research Methods&amp;rdquo; course.
-This is my initial attempt at trying to write a paper. I was quite naive when writing it, but the experience proved to be priceless.
-The title of my paper is &amp;ldquo;Survey: Current Web Application Security trends in Cyber Security Attacks and the Difficulties of Implementing a NGFW to Defend Against Them&amp;rdquo;.</description>
-      <content>&lt;p&gt;Hello. In my 3rd year of studying at Nazarbayev University, I did a survey paper for a &amp;ldquo;Research Methods&amp;rdquo; course.&lt;/p&gt;
-&lt;p&gt;This is my initial attempt at trying to write a paper.
-I was quite naive when writing it, but the experience proved to be priceless.&lt;/p&gt;
-&lt;p&gt;The title of my paper is &amp;ldquo;Survey: Current Web Application Security trends in Cyber Security Attacks and the Difficulties of Implementing a NGFW to Defend Against Them&amp;rdquo;.
-You can read the paper &lt;a href=&#34;/Survey_Paper.pdf&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+      <guid>/posts/so-you-want-to-ocaml/</guid>
+      <description>Introduction So, you might have heard that there&amp;rsquo;s a language called OCaml, and that it is one of the affordable ways of getting into Functional Programming (the other one being F#, but this is a topic for another day).
+Pros of OCaml OCaml is a really good language. There&amp;rsquo;s a saying that being copied is one best compliments that artist can get. Apparently for the programming language it is the same.</description>
+      <content>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;So, you might have heard that there&amp;rsquo;s a language called OCaml, and that it is one of the affordable ways of getting into Functional Programming (the other one being F#, but this is a topic for another day).&lt;/p&gt;
+&lt;h2 id=&#34;pros-of-ocaml&#34;&gt;Pros of OCaml&lt;/h2&gt;
+&lt;p&gt;OCaml is a really good language. There&amp;rsquo;s a saying that being copied is one best compliments that artist can get. Apparently for the programming language it is the same. Or not?&lt;/p&gt;
+&lt;p&gt;OCaml is imitated by many other languages constantly:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;F#&lt;/li&gt;
+&lt;li&gt;Rust&lt;/li&gt;
+&lt;li&gt;Haskell (to some extent)&lt;/li&gt;
+&lt;li&gt;ReScript&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;OCaml is one of the ML-family languages (with ALGOL and Lisp being the other ones).
+OCaml is such a prominent influence on the programming world, even if its influence is not easily observable.
+The initial version of React was written in OCaml.
+The ideas of React come from Functional Programming, in part of OCaml, because Jordan Walke was exposed to OCaml in large quantities.
+If radioactive-ocaml-compiler bites you, you can instantly get better at OCaml and functional programming, or so they say.
+The initial version of Rust was written in OCaml, before becoming self-hosted.
+There are many tools and languages that were built in OCaml.
+Jane Street is an obvious example that speaks about the successfulness of OCaml.&lt;/p&gt;
+&lt;h2 id=&#34;addressing-the-elephant&#34;&gt;Addressing the elephant&amp;hellip;&lt;/h2&gt;
+&lt;p&gt;But if the OCaml is such a nice language, why is it not as popular as Rust, for example?
+And that is a valid comment.
+And the answer is not as simple.
+There are many myths surrounding the OCaml, while some gripes with the language are true.
+Sometimes things that people say about the language are blatantly wrong, but sometimes the defense of the language sounds like a high-concentration copium.
+People believe that the functional programming is &amp;ldquo;useless&amp;rdquo; in a sense that no real software can be written in it, other than compilers, and that OCaml&amp;rsquo;s niche is relegated to that of hobby pet-projects.
+When you say that it is not the case, you are asked to show the examples of the working software that is popular and widespread (other than Jane Street).
+At that moment you say that not many people code in OCaml, and as such, we don&amp;rsquo;t have much to show, compared to the same Python.
+Less people code in OCaml, less projects in OCaml, less recognition of OCaml, and as such even less people learn about OCaml.
+A vicious cycle. Sure, it sounds like a copium.&lt;/p&gt;
+&lt;p&gt;But then again, there are genuine problems of the language that are not addressed by the mainstream user of the OCaml.
+OCaml tends to attract people who are curious and up for a challenge.
+As such, being able to run OCaml is a part of initiation ceremony.
+A test, so to speak.
+At least that&amp;rsquo;s how it may be regarded by others, and maybe that&amp;rsquo;s why there&amp;rsquo;s nothing been done about it.
+As such, they tend to detract average people who are curious, but don&amp;rsquo;t want to spend their precious weekend to figure out what the hell is going on.
+On top of being able to successfully setup the environment, one must learn about functional programming.
+This is a task for several weekends.
+Ain&amp;rsquo;t no way average people are going to put up with all of the bullying.&lt;/p&gt;
+&lt;p&gt;The reason Rust doesn&amp;rsquo;t fail as much, is because Rust is more friendly.
+Syntax is familiar to C/C++ developers.
+Rust allows you to write shitty mutable imperative code if you want to.
+Of course there&amp;rsquo;s borrow checker, but for simple introductionary examples it works.
+And that is the most important moment to hook people up.
+Setting up Rust is super easy.
+One command and it works.
+One compiler.
+Familiar executables.
+Support for IDE and LSPs.
+Cargo is also fine.
+There&amp;rsquo;s no ambiguity on what to use and what to do.
+You have an idea and you just think about how to describe it in code.
+With OCaml it is completely different.&lt;/p&gt;
+&lt;p&gt;I must confess&amp;hellip; It took me a year to get from reading my first book on OCaml to actually starting to write code.
+I don&amp;rsquo;t know why it must have been this way, but it was a running joke that I couldn&amp;rsquo;t figure out how to run the tools properly.
+I read books trying to figure it out.
+But I never found out.
+Maybe I read books wrongly.
+But then again, I never had the same problem with Rust.
+The only way when I first was able to make my first program in Rust is with the help of ChatGPT.
+I asked it how to build OCaml program and it gave me some options.
+Must I say that it doesn&amp;rsquo;t know nearly as much about OCaml and after some time the answers were useless.
+But at least I was able to finally code.
+After that I started to do something I really didn&amp;rsquo;t want to do: reading the docs.
+Not only that, I started reading other peoples&amp;rsquo; code in OCaml to see what I was doing wrong.
+Maybe some people get off of it, but I don&amp;rsquo;t.
+Again, why can&amp;rsquo;t be the answer be on the surface as with many Python questions on StackOverflow?
+Man, I hate Python&amp;hellip;&lt;/p&gt;
+&lt;p&gt;Anyhow, the onboarding process of OCaml is a real problem, and this is the problem that I am going to explain how to solve today.
+My answer is FAR-FAR-FAR from perfect.
+But it is a start.
+It is a necessary building step that hopefully sets you off on your OCaml journey so that you can discover things by yourself.&lt;/p&gt;
+&lt;h2 id=&#34;installing-and-running-ocaml&#34;&gt;Installing and Running OCaml&lt;/h2&gt;
+&lt;p&gt;First, we need to install &lt;code&gt;opam&lt;/code&gt;.
+Opam is a package manager for OCaml, just like &lt;code&gt;pip&lt;/code&gt; for Python, but a bit more involved.
+Opam is nice, because it can do so many things for you, like setting up specific version of OCaml.
+But because of that it tries to do so many things and if you don&amp;rsquo;t invoke in a correct way, you are screwed.
+And don&amp;rsquo;t bother building opam from sources, because you&amp;rsquo;re probably going to be missing some dependencies.
+It&amp;rsquo;s simpler to install it using package manager.&lt;/p&gt;
+&lt;p&gt;In case of Fedora:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo dnf install opam
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It is going to install some dependencies, like OCaml, but opam is going to do a lot of its own things, so it doesn&amp;rsquo;t matter.&lt;/p&gt;
+&lt;p&gt;Now, you installed opam, you think it works?
+Try installing &lt;code&gt;ocaml-lsp-server&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;opam install ocaml-lsp-server
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;At this point it should show you some message like &amp;ldquo;You must run this command!&amp;rdquo;.
+Run this:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;opam init
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will show you dialogues.
+Do as you want, but I decided to change &lt;code&gt;.bash_profile&lt;/code&gt;, so I said &amp;ldquo;yes&amp;rdquo;.
+After that you think you&amp;rsquo;re done? Wrong!
+Run this:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;eval $(opam config env)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I don&amp;rsquo;t know why, but you won&amp;rsquo;t be able to find executables downloaded by opam, like &lt;code&gt;dune&lt;/code&gt;, without this command.
+Now, we are coming to our crucial part: how to do you invoke compiler?&lt;/p&gt;
+&lt;p&gt;Well, my dear, you usually don&amp;rsquo;t.
+You are supposed to use a build system.
+Man, I hate it when the building process is so involved, when all I want is just an executable.
+Where are my lovely &lt;code&gt;python script.py&lt;/code&gt; or &lt;code&gt;gcc main.c&lt;/code&gt;?&lt;/p&gt;
+&lt;p&gt;The way you are going to build things depends on how big your project is and do you want sane but heavy support of an IDE and LSP?
+Or is the &amp;ldquo;write-compile-error-repeat&amp;rdquo; is enough for you?&lt;/p&gt;
+&lt;p&gt;If you just want to write simple scripts and don&amp;rsquo;t have much dependencies, you can use &lt;code&gt;ocamlbuild&lt;/code&gt;.
+I personally like &lt;code&gt;ocamlbuild&lt;/code&gt;, because it is very smart: it has internal solver that decides what files to compile, by looking at whether the code is used or not.
+Consider it a &lt;code&gt;make&lt;/code&gt; but on steroids, no need to write &lt;code&gt;Makefile&lt;/code&gt; yourself.&lt;/p&gt;
+&lt;p&gt;There are two ways to invoke ocamlbuild&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ocamlbuild main.native &lt;span style=&#34;color:#75715e&#34;&gt;# first way&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ocamlbuild main.byte   &lt;span style=&#34;color:#75715e&#34;&gt;# second way&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What is the differnce you ask?
+Well, you see, OCaml can build native binaries like C and C++ do.
+Binaries that work on your CPU.
+But then there&amp;rsquo;s also an OCaml VM.
+OCaml can generate the bytecode for that VM.
+Why, do you ask?
+Well, the bytecode version is indeed slower, but:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It is smaller in size&lt;/li&gt;
+&lt;li&gt;It is portable, like Java&lt;/li&gt;
+&lt;li&gt;You can do proper debugging, unlike with native version&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you need to add some dependencies to your program, you can do so with ocamlbuild, but I&amp;rsquo;m not sure at the moment.
+Please google a solution for specific lib, I believe there must be.&lt;/p&gt;
+&lt;p&gt;So, another way to build things is &lt;code&gt;dune&lt;/code&gt;.
+Many people use &lt;code&gt;dune&lt;/code&gt;, because it plays nicely with LSP and IDE.
+If you have a dependency, dune manages that for you, and doesn&amp;rsquo;t confuse the LSP.
+If it weren&amp;rsquo;t for that, I would be using ocamlbuild the daily basis.&lt;/p&gt;
+&lt;p&gt;Also, if you believe that dune&amp;rsquo;s documentation sucks, you&amp;rsquo;re not alone.
+To initiate a project:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;dune init proj project_name
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This creates the following project:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;project_name/
+├── dune-project
+├── test
+│   ├── dune
+│   └── project_name.ml
+├── lib
+│   └── dune
+├── bin
+│   ├── dune
+│   └── main.ml
+└── project_name.opam
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;test&lt;/code&gt; is where the tests go, &lt;code&gt;bin&lt;/code&gt; is where you put your &lt;code&gt;main.ml&lt;/code&gt;, and &lt;code&gt;lib&lt;/code&gt; is where your main code goes.
+&lt;code&gt;main.ml&lt;/code&gt; is essentially used to call the code from the &lt;code&gt;lib&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The main configuration goes into &lt;code&gt;dune&lt;/code&gt; files:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(executable &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(library &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are &lt;code&gt;name&lt;/code&gt; and &lt;code&gt;public_name&lt;/code&gt; parameters that are pertinent to &lt;code&gt;library&lt;/code&gt; configuration. Not sure which one is used, so I keep them the same for the meantime.
+When writing a configuration for &lt;code&gt;executable&lt;/code&gt;, you need to tell dune to use your library that you are working on.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(exectuable
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (public_name project_name)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (name main)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (libraries project_name))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That&amp;rsquo;s the most important part about configuring dune.
+After that you can call dune:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;dune build
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And execute your binary:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;dune exec bin/main.exe
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;At least that&amp;rsquo;s how I do it.&lt;/p&gt;
+&lt;p&gt;Now, for the LSP and stuff.
+So far I was able to setup VSCodium only.
+Download the binary from the Github, make sure it is not from flatpak.
+Flatpak tends to isolate packages.
+Because of that VSCodium won&amp;rsquo;t find your LSP.
+Or OCaml and dune for that matter.&lt;/p&gt;
+&lt;p&gt;Go to extensions and download &amp;ldquo;OCaml Platform&amp;rdquo;.
+After installing make sure that the &amp;ldquo;ocaml-lsp-server&amp;rdquo; is installed.
+VSCodium may also ask you to install &lt;code&gt;ocamlformat&lt;/code&gt;.
+Be a sport.
+After that you should be able to have a working environment.
+And if sometimes LSP doesn&amp;rsquo;t work as expected, try restarting the server (Ctrl+P -&amp;gt; &amp;ldquo;OCaml restart&amp;rdquo;), doing &lt;code&gt;dune build&lt;/code&gt;, and making sure your &lt;code&gt;*.mli&lt;/code&gt; files didn&amp;rsquo;t hide the important functions or types.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s it for installing and setting up.
+As to how work with OCaml, it will be another post.&lt;/p&gt;
 </content>
     </item>
     
