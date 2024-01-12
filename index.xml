@@ -6,7 +6,282 @@
     <description>Recent content on Terminal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 20 Sep 2023 17:24:15 +0900</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 12 Jan 2024 03:27:42 +0900</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How and Why It Took Me One Year to Start Coding in FP Language</title>
+      <link>/posts/how-and-why-fp/</link>
+      <pubDate>Fri, 12 Jan 2024 03:27:42 +0900</pubDate>
+      
+      <guid>/posts/how-and-why-fp/</guid>
+      <description>Intro You know, since I accidentially discovered Functional Programming due to being a Security Analyst at a time (and realizing how shitty our software practices are to allow many severe vulnerabilities into production due to C&amp;rsquo;s nonexistent memory safety), I was a hard proponent, or a more fancy word they call us, an evangelist of FP (but that is a topic of its own).
+Of course, when I try to do that, I get a massive pushback from people:</description>
+      <content>&lt;h1 id=&#34;intro&#34;&gt;Intro&lt;/h1&gt;
+&lt;p&gt;You know, since I accidentially discovered Functional Programming due to being a Security Analyst at a time (and realizing how shitty our software practices are to allow many severe vulnerabilities into production &lt;del&gt;due to C&amp;rsquo;s nonexistent memory safety&lt;/del&gt;), I was a hard proponent, or a more fancy word they call us, an evangelist of FP (but that is a topic of its own).&lt;/p&gt;
+&lt;p&gt;Of course, when I try to do that, I get a massive pushback from people:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Most of the research in my University among Master&amp;rsquo;s students done in on AI (but mostly ML/DL)&lt;/li&gt;
+&lt;li&gt;There are less people in my FP lab than the fingers on my hands (and 30% of them will graduate in couple of months)&lt;/li&gt;
+&lt;li&gt;People generate even more Python code than before (thanks to all the LLMs)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I asked myself a question every (remotely sane) person would ask at this point: &amp;ldquo;Why?&amp;rdquo;.
+But again, the answer is still somewhat out there.
+What happened, however, is that I started to look inwards in search of the answer (because Universe won&amp;rsquo;t answer my calls).
+What happened is that I realized that all the &amp;ldquo;5 stages™&amp;rdquo; that FP caused me, I successfully blocked out all the memories to be able to go on with my life.
+And now, when I am all &lt;del&gt;crippled&lt;/del&gt; adjusted to my new life, I am pushing people into doing things they don&amp;rsquo;t like and surprised when I&amp;rsquo;m getting pushback even though it took me a whole year of forcing myself literally my every free and concious moment to internalize FP ideology (because you see, I&amp;rsquo;m &lt;del&gt;a masochist&lt;/del&gt; curious).&lt;/p&gt;
+&lt;p&gt;So in this post we will go into my obviously objective, accurate and comprehensible account of one year that I was subjecting myself to learn FP starting from discovery until I was able to start to write my first lines of code in OCaml.&lt;/p&gt;
+&lt;h1 id=&#34;discovery&#34;&gt;Discovery&lt;/h1&gt;
+&lt;p&gt;As I said, it was purely accidential.
+I am one of those people who use Incognito mode to browse internet because:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It doesn&amp;rsquo;t clutter history with random shit that I visit&lt;/li&gt;
+&lt;li&gt;Drops all the unnecessary personalized cookies&lt;/li&gt;
+&lt;li&gt;Yields sane recommendations on YouTube (or at least used to, before I switched on DistractionFree YouTube)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So, I was sometimes recommended a video from Richard Feldman on why Functional Programming Languages™ are not popular and one time I gave in and decided to watch it.
+Needless to say, I didn&amp;rsquo;t understand anything of what he said the first time, because C and Python obviously have functions, duh, what are you talking about.&lt;/p&gt;
+&lt;p&gt;The next two things happened accidentially, I guess.
+I was in my last year of the undergraduate studies and we had to make a Senior project.
+In a university where most of the staff are ML-researchers and most students just want to graduate at this point and take simple web-development projects, I decided to make a world a better place&amp;hellip; and design a compiler for a toy language that won&amp;rsquo;t be used by anyone, not even me.&lt;/p&gt;
+&lt;p&gt;I always had a fascination by compilers that I can&amp;rsquo;t explain why.
+On my first year of undergraduate I asked the question of how to develop a programming language (to a professor who turns out to be specializes in compilers and all the mathematical stuff).
+He probably thought that I was just not serious and gave me a simple answer like try researching it on your own or watch YouTube, but that I can do it if I really want it (or something of the sorts, but I remember that I didn&amp;rsquo;t get any answer).
+I started watching some random YouTube video on how to build my own programming language, and didn&amp;rsquo;t understand a thing.
+I also had a course where we had to code in MIPS assembly and most of the students struggled.
+I had a genius idea of developing a compiler that generates a MIPS assembly from C language, but I didn&amp;rsquo;t know how to put the idea into words and so by the time it didn&amp;rsquo;t take off the ground, the course ended (maybe I should do it on some weekend, seems like a simple project tbh).
+So yeah, I had some interest in compilers.&lt;/p&gt;
+&lt;p&gt;Some years into the future, I&amp;rsquo;m working as a Cyber Security Analyst, trying to make sense of what is happening for the last couple of years.
+And by chance I discover that there&amp;rsquo;s actually a programming language that avoids all the security pitfalls of C.
+&amp;ldquo;Oh wow, sounds like science-fiction!&amp;rdquo; I thought to myself.
+I couldn&amp;rsquo;t believe it, since if it was true, why wouldn&amp;rsquo;t people code in it more often?
+Turns out they do, but being good and being popular are not the same, or so it seems.
+And so, I tell about this fancy programming language Rust to my Senior-project teammate.
+&amp;ldquo;Rust? Duh, I know about it&amp;rdquo;, was kinda his reaction.
+He is really smart and also codes in PHP in his fulltime job (while being senior student) because it was a really good deal in terms of $/h.
+He is really smart.
+And so, I am inspired to develop a new compiler with a borrow checker for a Senior Project.
+Being dumb is what motivated me to make those kinds of claims.
+I&amp;rsquo;m kinda envious of that stupid guy.
+We have a saying that even an ocean is a knee-deep if you&amp;rsquo;re fool or drunk.
+But my professor had to fight me on that one constantly, and I retaliated back.
+Turns out, sometimes professors are correct.
+We cut out half of the stuff that I proposed (the borrow checker was the first to go) and we barely managed the project on time.
+If it wasn&amp;rsquo;t for our smart teammate, we wouldn&amp;rsquo;t have made it.
+We were coding in C++, and I was tired of a state-management in code generation.
+My lack of high-level view and deep understanding of what was going on didn&amp;rsquo;t help me either.
+So I was trying to do my best to close the gaps as soon as possible.
+Accidentially found out about book &amp;ldquo;Modern Compiler Implementation in ML&amp;rdquo; (far better book than &amp;ldquo;Dragon&amp;rdquo; for newbies).
+This was my first encounter with &lt;del&gt;proper&lt;/del&gt; ML.&lt;/p&gt;
+&lt;p&gt;And now, with all the ideas of Rust and ML and compilers, I stumble back to the Richard Feldman&amp;rsquo;s video without realizing how all the things are interconnected.
+In hindsight, it is really surprising that the things that seem remote are actually interconnected: I mean security, some esoteric programming language and the art of developing compilers.
+Don&amp;rsquo;t you think so or are you just too smart?&lt;/p&gt;
+&lt;p&gt;And so, after the video I started to (somehow) discover that Functional Programming is (another) thing that can prevent security issues.
+Ain&amp;rsquo;t it perfect?!
+And so I start to read different blogs posts on it, trying to wrap my head around it.
+They all keep talking about functions (duh), about the importance of &amp;ldquo;immutability&amp;rdquo; (I&amp;rsquo;ll be honest, that&amp;rsquo;s when I first learned the meaning of the word), but also about some languages like OCaml, Haskell and Lisp.
+The thing is, when you&amp;rsquo;re a beginner and pretending to be smart, you&amp;rsquo;re trying to wrap your head around many things and they don&amp;rsquo;t make sense initially.
+Heck, they don&amp;rsquo;t make sense even after you start using them.
+You can make a whole academic career from from researching types alone.
+And so, I was lost, which brings us to the next part&amp;hellip;&lt;/p&gt;
+&lt;h1 id=&#34;pain-and-suffering&#34;&gt;Pain and Suffering&lt;/h1&gt;
+&lt;p&gt;Instead of being a normal person and forgetting all this nonsense as a bad fever dream, I started to research this in my free time.
+Blog posts was a mistake, so I switched to YouTube videos and books.
+Turns out there aren&amp;rsquo;t as many books on FP as on, say, Python.
+And videos also differ their content, length and quality.
+But the thing is that the materials are scarce, so when you start searching for them, you&amp;rsquo;ll start seeing the same videos and books over and over again (unless you go onto some real books which are pre-2000).
+And so, you&amp;rsquo;re forced to work with what you&amp;rsquo;re given and try to actually listen and understand what people are saying.
+The first thing that stands out, is that you can&amp;rsquo;t actually dumb your way through FP, like you did in, say, Python.
+You actually have to think about what is being told, what is not told, what are the implications of what being said and most importantly, how to put it into practice.
+Math people are good at this, but they tend to overestimate other people&amp;rsquo;s capabilities and make a grave mistake thinking that we understand them.&lt;/p&gt;
+&lt;p&gt;I really liked NDC Conference videos on FP.
+Surprisingly, they have a lot of them and they are actually really good.
+I liked Scott Wlaschin&amp;rsquo;s videos on FP and F# (but mostly FP).
+13 ways to program a turle, domain-driven development with F# and railway-oriented programming, those are nice things.
+But even when the &amp;ldquo;railway-oriented&amp;rdquo; sounds way nicer than &amp;ldquo;monads&amp;rdquo;, it still took me some time to understand what is being said (and I guess some initial practice was crucial in that).
+Actually, because of Scott Wlaschin (and because I couldn&amp;rsquo;t figure out how to install and run other tools) I decided to go with F#.&lt;/p&gt;
+&lt;p&gt;The problem with FP is that you can basically do FP in anything, even in assembly (with much effort and dedication).
+In OOP it is also kinda the same, but when you learn one language, you basically learn them all, and they start to look the same to you.
+FP languages are also kinda the same, but to see that, you need to learn lambda-calculus.
+You see, the bar is kinda high in this case.&lt;/p&gt;
+&lt;p&gt;When you&amp;rsquo;re given all the choices among the different languages like Lisp, Haskell, OCaml, F#, Erlang, Elixir, Scala and just so many more that I&amp;rsquo;m lazy to list, as a newbie you just REALLY start wondering where you should start.
+Oh, and there&amp;rsquo;s like Common Lisp and then there&amp;rsquo;s Scheme (and there are constant sophisticated debates on which is better which don&amp;rsquo;t really answer the question with which it is better to begin).
+Oh, and then there are like 20+ dialects, compilers and interpreters of Common Lisp (don&amp;rsquo;t quote me on that, I&amp;rsquo;m too lazy to count the variants of CL-compliant Lisps).
+Oh, there&amp;rsquo;s also OCaml and Standard-ML (among which there are many different versions by different universities, but don&amp;rsquo;t worry, you won&amp;rsquo;t code in any of them :D)
+Erlang, Elixir, quite self-explanatory &lt;del&gt;go with Elixir&lt;/del&gt;.
+Haskell is kinda standalone, but then there&amp;rsquo;s PureScript and around 2000-pages book on learning FP along with PureScript.
+F# is basically an OCaml for .NET.
+Scala is said to be nice language, but then again, I can&amp;rsquo;t say it is a pure FP.
+I&amp;rsquo;m sorry, I detest objects and try to avoid them (even in OCaml).&lt;/p&gt;
+&lt;p&gt;So yeah, all those languages are kinda the same, but when you&amp;rsquo;re just a beginner, it doesn&amp;rsquo;t seem so and the choices seem overwhelming and pundit and pretentious discussions on HN don&amp;rsquo;t really help newbies.
+So because of Scott Wlaschin I decided to go with F#.
+Man, it was a mistake.
+By a pure chance I managed to install the SDK and randomly setup *.fsproj.
+But I wanted to learn FP, not .NET, goddamnit.
+And that&amp;rsquo;s kinda another problem with all the FP languages: they work by some internal logic that developers came up with, and will work in a specific way only and you need to be aware of that &lt;del&gt;or fuck off&lt;/del&gt; read some (nonexistant) documentation.
+FP really has made it so only smart people can successfully navigate it, huh?
+Needless to say, I never went back to F#.&lt;/p&gt;
+&lt;p&gt;Scott Wlaschin is great when you have some basics and know what you&amp;rsquo;re looking for.
+But as a beginner, what had a great impact on me is the video on &amp;ldquo;Approaching problems as a Functional Programmer&amp;rdquo; or something.
+While I didn&amp;rsquo;t understand the first half, the second half was a demo on how to change the mess of JavaScript code into something beautiful.
+What he did was actually quite simple, he made all the functions pure by repeating the same logic over and over.
+But when you&amp;rsquo;re seeing it for the first time, it felt like witnessing a magic trick: you like it and can&amp;rsquo;t get enough.
+It also fuels your motivation to learn the secret.
+And so I decided to repeat the experience.&lt;/p&gt;
+&lt;p&gt;I didn&amp;rsquo;t know JavaScript good enough, so I decided to go with Python.
+At this point I discovered Coconut, a programming language that is superset of Python and is functional.
+I liked the idea.
+Except it was a bad idea.
+The main thing that holds Coconut back is documentation and development tools.
+Again, the same problem, I was trying to learn FP, not Coconut.
+And so, I had to bid Coconut a goodbye, but it was a (somewhat) pleasing experience for a first time since trying to learn FP.
+Then there was Hy, but I guess I don&amp;rsquo;t like brackets, I&amp;rsquo;m sorry.&lt;/p&gt;
+&lt;p&gt;And so, no more excuses.
+Me, Python and FP.
+So, what do I do now?&lt;/p&gt;
+&lt;p&gt;I started small.
+Not because I was afraid, but because I couldn&amp;rsquo;t do much.
+I was still dependent on mutation, local state and for-loops instead of functional counterparts.
+Somehow, the most difficult part was to make that shift in paradigm, to approach problems from a new angle.
+When you look back, you realize it wasn&amp;rsquo;t so difficult.
+But it was hard.
+It was simple, but it wasn&amp;rsquo;t easy.
+That is a subtle, but important difference.
+Additionally, when you come back to Python, you&amp;rsquo;ll notice that many modules actually encourage mutating and imperative styles, sometimes it is the ONLY way to do things.
+Surprisingly, I liked &lt;code&gt;pyplot&lt;/code&gt; a lot, because it was declarative and it made sense after all the FP and logic background.&lt;/p&gt;
+&lt;p&gt;Slowly, I started to make more and more in functional style.
+I started to make state explicit via input arguments.
+I started making more functions for each small thing (my friends still say that I&amp;rsquo;m overkilling it).
+I started to use recursion, pattern matching, higher-order functions, lambdas and list-comprehensions where I could.
+I started to decompose problems into smaller, easier problems and started to make my code more modular and more testable.
+One of the joys was figuring out that I can use Python&amp;rsquo;s built-in lists as a configuration DSL (and get code-highlight and formatting for free!).
+But the best thing, of course, is that the idea worked.
+It matched the problem I was trying to solve so naturally, I couldn&amp;rsquo;t believe it.
+I wanted to share my joy with others and started to become a proponent of Functional Programming (much to annoyance of my colleagues and friends) without actually understanding what it is.&lt;/p&gt;
+&lt;p&gt;Of course, trying it out in Python helped me to deepen and practice lessons learned from FP.
+Also, the book &amp;ldquo;Grokking Functional Programming&amp;rdquo; is a real godsend.
+Maybe we should recommend it to anyone starting out in FP?&lt;/p&gt;
+&lt;p&gt;At some point however, I started be constrained by the language.
+Needless to say, Python is not suited for Functional Programming.
+You can do it, but with much effort, and when you do, you get unpythonic code.
+You also get punished by slow performance and heavy memory usage.
+Oh, and there are unintended side-effects like unclear scopes, variable shadowing and passing references instead of copies.
+Oh, and Guido was against lambdas initially.
+To the point that people started to hack-in lambdas with macros and whatnot.
+Man, I learned more about Python while trying to learn FP than in all the years prior.
+I started to hate Python.
+I now see that all the mistakes that I make and that prevented me from seeing the functional paradigm, it was because of deliberate design choices of Python.
+Python must burn, in my opinion, somewhere deep in hell.
+But most importantly, it had to go.&lt;/p&gt;
+&lt;p&gt;Which brings me to the next topic&amp;hellip;&lt;/p&gt;
+&lt;h1 id=&#34;crossing-the-bridge&#34;&gt;Crossing the bridge&lt;/h1&gt;
+&lt;p&gt;At this point I was dismayed.
+I wanted to do FP.
+I saw the potential.
+But I was held back by my lack of skill.
+The only languages I knew where C++ and Python, and I knew Python better than C++.
+And I also was still a Cyber Security Analyst: solving real problems comes first, FP and abstract problems second.
+I was watching all the videos on YouTube, of people giving talks about how they use those FP languages and neatly solve all their problems.
+I wanted to do the same, just like them.
+And so I was searching for ways to integrate those languages at my job.
+Nobody was in support of that.
+Looking back, I see why (I also see that if we did, it may be a better thing in a long term, but again, another topic for another day).
+Needless to say, it was disheartening.
+But I was still trying.
+I was trying to give presentations on FP stuff that I recently learned in hopes to: 1) teach some of it to my colleagues, 2) better understand it myself.
+I once made a grave mistake of trying to explain functors and monads to colleagues.
+But it was fun seeing their attention slowly drifting away.
+Kinda.&lt;/p&gt;
+&lt;p&gt;In the end, I knew that I had to do it myself.
+I have to be the proponent of change that I want to see.
+I must learn those languages myself and code in them myself.
+But to do that, I need to decide on the language to learn.
+And so back to the drawing board.
+With my &amp;ldquo;aquired taste&amp;rdquo; for FP I could better appreciate all the benefits of different FP languages and they were asking in return (not really, but it was nice to have less fog in your head, you know?).
+Still, I couldn&amp;rsquo;t decide.
+And so I made an obvious decision: why not learn them all?&lt;/p&gt;
+&lt;p&gt;And so, I was now reading many books about different languages.
+It is a funny experience in itself.
+You start to notice many ways in which the languages are similar, but then the quirks and design choices start to become more apparent.&lt;/p&gt;
+&lt;p&gt;But what happened next was even more surprising: languages started to fall off on their own.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Scala was first to go (partially to some resemblence to Python syntax, but mainly OOP).
+I was trying to learn FP.&lt;/li&gt;
+&lt;li&gt;Elixir and Erlang: I didn&amp;rsquo;t want to go through dynamic typing again.&lt;/li&gt;
+&lt;li&gt;Lisp: brackets were too much.&lt;/li&gt;
+&lt;li&gt;F#: I tried toying with it a bit, but I still couldn&amp;rsquo;t become friends with .NET&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The choices were shrinking, which is good, but also scary: what if I won&amp;rsquo;t like any of the languages left?
+There are mainly two options here: Haskell and OCaml.&lt;/p&gt;
+&lt;p&gt;Haskell is regarded as a big daddy of Functional Programming, which I think is sad.
+Haskell has many design choices that require experience and deliberate understanding to appreciate them, and even then not all of the choices are good.
+But most importantly is that it&amp;rsquo;s hard for beginners.
+I thought it was a meme that &amp;ldquo;Hello World&amp;rdquo; in Haskell comes in the last 20% of Haskell books, until I saw it myself.
+I think people who like Haskell can&amp;rsquo;t really write books: most of them are about list manipulations and functors.
+Writing a beginner-friendly book about Haskell is one of my dream goals.&lt;/p&gt;
+&lt;p&gt;And so, I decided to try OCaml.
+Before I started to look into it, I thought that OCaml was a dead language: it has even less lines of code than Haskell, which I thought was also a useless language that no-one considers seriously.
+I thought that OCaml has a bad ecosystem (which it does, compared to JS/Python/Haskell).
+I couldn&amp;rsquo;t install the SDK properly (&lt;code&gt;opam&lt;/code&gt; is opionated and won&amp;rsquo;t work in other terminal sessions unless you do &lt;code&gt;eval $(opam env)&lt;/code&gt;).
+Also, I didn&amp;rsquo;t know how to compile and build projects in OCaml.
+I literally had to ask ChatGPT how to do that, and thankfully it helped with &lt;code&gt;dune&lt;/code&gt; and &lt;code&gt;ocamlbuild&lt;/code&gt;.
+I like &lt;code&gt;ocamlbuild&lt;/code&gt; more, but its documentation could be WAY better.
+&lt;code&gt;dune&lt;/code&gt; I really don&amp;rsquo;t like.
+Maybe I&amp;rsquo;ll write my own build system, who knows.&lt;/p&gt;
+&lt;p&gt;I didn&amp;rsquo;t like the fact that writing OCaml without LSP is really difficult: all the high-load goes onto developer instead of the computer.
+Turns out, this is something that you have to get used to (or install VSCode (which I also don&amp;rsquo;t like), and use Dune, (which I like even less), if you want to get that nice LSP support).
+Editor support could be way better.
+As a compromise, I&amp;rsquo;ve settled with Emacs for now, although I&amp;rsquo;m using doom-emacs, mainly because of vim-bindings (this text was written in vanilla vim btw).&lt;/p&gt;
+&lt;p&gt;Writing code in OCaml is a challenge in its own.
+The first thing that was throwing me off (or ocamlbuild) is that you need &lt;code&gt;in&lt;/code&gt; for every local &lt;code&gt;let&lt;/code&gt; binding.
+I didn&amp;rsquo;t understand why, since in F# I didn&amp;rsquo;t need to do that.
+At first it was a drag, although with time I started to appreciate that aspect of OCaml and wouldn&amp;rsquo;t want to have it any other way now.
+Another problem is that you often don&amp;rsquo;t know what to write and how to write.
+Writing in OCaml is kinda like art.
+If you don&amp;rsquo;t know what you&amp;rsquo;re writing, then what you&amp;rsquo;re writing is bad, and it shows really quickly.
+I&amp;rsquo;m currently solving 99 problems in OCaml.
+While I think that my code is nice, there is some guy that has way more succinct code.
+It is eye-opening to see many ways in which one can write OCaml.&lt;/p&gt;
+&lt;p&gt;And this is another problem: all of this sounds easy, but it actually took me a long time to learn about OCaml before I could start writing my first lines of code.
+I literally finished &amp;ldquo;Real World OCaml&amp;rdquo; from beginning to end to see all there is to see about the language.
+What was nice about the Python is that with some minimal knowledge you can start writing some useful code or be able to read parts of others&amp;rsquo; codes.
+It&amp;rsquo;s not the case with OCaml.
+For me I had to see all the parts of OCaml and how they fit together.
+It took me a whole book to realize that OCaml is just a lambda-calculus with ergonomics.
+But then there&amp;rsquo;s a module system.
+Module system is used to solve problems you never knew existed.
+Why the hell do I need to write&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-ocaml&#34; data-lang=&#34;ocaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;module&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;IntMap&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Map.&lt;span style=&#34;color:#a6e22e&#34;&gt;Make&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;module&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; compare &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; compare &lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;when in F# I can write&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;IntMap&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Map&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;int&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that there&amp;rsquo;s a difference between &lt;code&gt;module Foo&lt;/code&gt; and &lt;code&gt;module type Foo&lt;/code&gt; and I couldn&amp;rsquo;t understand why compiler is unhappy.
+And why every file name must be unique and how actually structure the project.
+And why you don&amp;rsquo;t actually need to import modules that you want to use.
+You&amp;rsquo;re actually interacting with module system right away and it shapes the way you approach OCaml, in one way or another.&lt;/p&gt;
+&lt;p&gt;What I don&amp;rsquo;t like about all the FP stuff, is that you have all this upfront cost that you need to pay before you can actually start learning and do something useful.
+I think it can be improved in many ways.
+Our ecosystem could be way better.
+And then there are misconceptions about our community.
+But some of them are on point.
+I mean, you&amp;rsquo;re thinking whether you should learn Haskell and then some guy shows off how he implemented factorial and fibonacci sequence in Haskell type system.
+I mean, do we really need to scare newbies?&lt;/p&gt;
+&lt;p&gt;But then again, there&amp;rsquo;s also a OCaml&amp;rsquo;s younger, but much more difficult brother - Coq.
+I&amp;rsquo;ll get to him someday.
+Eventually.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;There aren&amp;rsquo;t many conclusions to make, other than that learning FP is hard by design.
+Some obstacles are artificial, while others are inherent.
+What I showed you was just my way of how I got here.&lt;/p&gt;
+&lt;p&gt;The sad part about this all is that I can&amp;rsquo;t walk this path twice.
+Despite my gruelling and whinning, this experience was also really fun.
+It was a joy to discover new things and understand how world operates on a different level.
+I somehow stuck through the difficult storms and now I&amp;rsquo;m on the outskirts of the the world, in the barren lands where I&amp;rsquo;m free to build my kingdom or help others and few survivors who happen to share the similar mindset as me.
+This is nice in its own way.&lt;/p&gt;
+&lt;p&gt;I also learned that sometimes the only way to do difficult stuff is by just doing it.
+Sometimes there&amp;rsquo;s no other way.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re reading this in hopes of learning FP or deciding if you should learn it: good luck.
+It will be worth it.&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>So You Want to Ocaml</title>
       <link>/posts/so-you-want-to-ocaml/</link>
