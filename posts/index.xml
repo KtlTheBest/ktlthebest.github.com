@@ -13,9 +13,14 @@
       <pubDate>Thu, 22 Feb 2024 13:51:03 +0900</pubDate>
       
       <guid>/posts/so-you-want-to-fp-iii/</guid>
-      <description>Composing with side-effects Now. If you have thought that the FP guys are crazy, hopefully you&amp;rsquo;re going to end up with a ton of evidence on your hands to finally lock us away into the depths of the abyss, where we truly belong. Or you might have discovered something new, interesting and useful, which, you know, is also good.
+      <description>Part I Part II Part III Composing with side-effects Now. If you have thought that the FP guys are crazy, hopefully you&amp;rsquo;re going to end up with a ton of evidence on your hands to finally lock us away into the depths of the abyss, where we truly belong. Or you might have discovered something new, interesting and useful, which, you know, is also good.
 There are three things that make functional programming as functional as it gets (or not):</description>
-      <content>&lt;h1 id=&#34;composing-with-side-effects&#34;&gt;Composing with side-effects&lt;/h1&gt;
+      <content>&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp/&#34;&gt;Part I&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp-ii/&#34;&gt;Part II&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Part III&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;composing-with-side-effects&#34;&gt;Composing with side-effects&lt;/h1&gt;
 &lt;p&gt;Now.
 If you have thought that the FP guys are crazy, hopefully you&amp;rsquo;re going to end up with a ton of evidence on your hands to finally lock us away into the depths of the abyss, where we truly belong.
 Or you might have discovered something new, interesting and useful, which, you know, is also good.&lt;/p&gt;
@@ -424,6 +429,11 @@ Even if you won&amp;rsquo;t code in them professionally (or ever), at least your
 What I hate more than Python is bad Python code that makes other people&amp;rsquo;s lives misereable.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s try to make the world a better place.&lt;/p&gt;
 &lt;p&gt;Hope to see you soon&amp;hellip;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp/&#34;&gt;Part I&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp-ii/&#34;&gt;Part II&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Part III&lt;/li&gt;
+&lt;/ul&gt;
 </content>
     </item>
     
@@ -433,10 +443,15 @@ What I hate more than Python is bad Python code that makes other people&amp;rsqu
       <pubDate>Thu, 22 Feb 2024 13:50:44 +0900</pubDate>
       
       <guid>/posts/so-you-want-to-fp-ii/</guid>
-      <description>Higher order functions Functional programmers are all about making things better.
+      <description>Part I Part II Part III Higher order functions Functional programmers are all about making things better.
 The problem is that we don&amp;rsquo;t know how to make things better.
 So we tend to explore different ideas. And most of them don&amp;rsquo;t work. But some turn out to be surprisingly effective. So much so, the other languages tend to get those ideas into their own languages and then when you try to argue why you should learn a proper functional programming language, people look at you like crazy, saying that they already have all the fancy functional programming stuff in their language and that they already know what it is, while their code is still 90% imperative and state mutating shit.</description>
-      <content>&lt;h1 id=&#34;higher-order-functions&#34;&gt;Higher order functions&lt;/h1&gt;
+      <content>&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp/&#34;&gt;Part I&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Part II&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp-iii/&#34;&gt;Part III&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;higher-order-functions&#34;&gt;Higher order functions&lt;/h1&gt;
 &lt;p&gt;Functional programmers are all about making things better.&lt;/p&gt;
 &lt;p&gt;The problem is that we don&amp;rsquo;t know how to make things better.&lt;/p&gt;
 &lt;p&gt;So we tend to explore different ideas.
@@ -946,18 +961,28 @@ Hopefully, you are starting to see why I don&amp;rsquo;t like Python.&lt;/p&gt;
 Look up the documentation if you&amp;rsquo;re interested.&lt;/p&gt;
 &lt;p&gt;Now, hopefully you understand those tools and they will be useful to you &lt;del&gt;or you finally decided to code in the better programming language&lt;/del&gt;.&lt;/p&gt;
 &lt;p&gt;We are almost there, I can see the light.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp/&#34;&gt;Part I&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Part II&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp-iii/&#34;&gt;Part III&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </content>
     </item>
     
     <item>
       <title>So You Want to Functional Programming</title>
       <link>/posts/so-you-want-to-fp/</link>
-      <pubDate>Fri, 19 Jan 2024 01:03:00 +0900</pubDate>
+      <pubDate>Thu, 22 Feb 2024 01:03:00 +0900</pubDate>
       
       <guid>/posts/so-you-want-to-fp/</guid>
-      <description>Hello there, poor soul! How come you found your way to this post? Are you perhaps unhappy with the way programming is done nowadays? Did you perhaps hear someone say that functional programming has all the benefits like:
+      <description>Part I Part II Part III Hello there, poor soul! How come you found your way to this post? Are you perhaps unhappy with the way programming is done nowadays? Did you perhaps hear someone say that functional programming has all the benefits like:
 Simplifying your projects Removing a class of errors and bugs Bringing back joy of programming of early days Well, whether those claims are true or not, you will have to see them for yourself.</description>
-      <content>&lt;p&gt;Hello there, poor soul!
+      <content>&lt;ul&gt;
+&lt;li&gt;Part I&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp-ii/&#34;&gt;Part II&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp-iii/&#34;&gt;Part III&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Hello there, poor soul!
 How come you found your way to this post?
 Are you perhaps unhappy with the way programming is done nowadays?
 Did you perhaps hear someone say that functional programming has all the benefits like:&lt;/p&gt;
@@ -1328,6 +1353,11 @@ That&amp;rsquo;s how I started my journey into functional programming.
 With a small step.
 It&amp;rsquo;s fine if it will be your only step.&lt;/p&gt;
 &lt;p&gt;And for those who are still onboard, let us move on.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Part I&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp-ii/&#34;&gt;Part II&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ktlthebest.github.io/posts/so-you-want-to-fp-iii/&#34;&gt;Part III&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </content>
     </item>
     
