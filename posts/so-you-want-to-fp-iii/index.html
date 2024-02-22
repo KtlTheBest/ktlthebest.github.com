@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>So You Want to Functional Programming (Part III) :: Terminal</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Composing with side-effects Now. If you have thought that the FP guys are crazy, hopefully you&amp;rsquo;re going to end up with a ton of evidence on your hands to finally lock us away into the depths of the abyss, where we truly belong. Or you might have discovered something new, interesting and useful, which, you know, is also good.
+There are three things that make functional programming as functional as it gets (or not):" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/so-you-want-to-fp-iii/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/orange.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/orange.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="So You Want to Functional Programming (Part III)">
+<meta property="og:description" content="Composing with side-effects Now. If you have thought that the FP guys are crazy, hopefully you&amp;rsquo;re going to end up with a ton of evidence on your hands to finally lock us away into the depths of the abyss, where we truly belong. Or you might have discovered something new, interesting and useful, which, you know, is also good.
+There are three things that make functional programming as functional as it gets (or not):" />
+<meta property="og:url" content="/posts/so-you-want-to-fp-iii/" />
+<meta property="og:site_name" content="Terminal" />
+
+  
+  
+  <meta property="og:image" content="/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2024-02-22 13:51:03 &#43;0900 JST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="orange">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Terminal
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="/showcase">Showcase</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about" >About</a></li>
+        
+      
+        
+          <li><a href="/showcase" >Showcase</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/so-you-want-to-fp-iii/">So You Want to Functional Programming (Part III)</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2024-02-22</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h1 id="composing-with-side-effects">Composing with side-effects<a href="#composing-with-side-effects" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Now.
+If you have thought that the FP guys are crazy, hopefully you&rsquo;re going to end up with a ton of evidence on your hands to finally lock us away into the depths of the abyss, where we truly belong.
+Or you might have discovered something new, interesting and useful, which, you know, is also good.</p>
+<p>There are three things that make functional programming as functional as it gets (or not):</p>
+<ul>
+<li>Immutability</li>
+<li>Composition</li>
+<li>Purity</li>
+</ul>
+<p>Different languages tend to pull on those different things in different proportions.
+For example Lisp allows you to do side-effects and mutate variables.
+Clojure on the other hand is all about immutability.
+Haskell is about managing those side-effects and maintaining purity.
+And OCaml is like, let me just code the way I want: it can be highly functional and pure, but can also code loose and dirty, with mutation and in imperative style.</p>
+<p>But then again, there are things that are really important across the languages: composability.</p>
+<p>Hopefully from the previous experiences you&rsquo;ve realized that the composability is a good thing and actually helps us to write simpler code: if you can actually write your code in terms of simpler functions that are composable, this is what you would do instead of writing a wall of code and keeping that state in your head all the time.</p>
+<p>However, hopefully that you&rsquo;ve also realized that composition works nicely if the functions are <em>pure</em>.
+To maintain some sense of purity, you need <em>immutability</em>: you can&rsquo;t have values changing suddenly underneath you.</p>
+<p>That&rsquo;s why those things are important and why references are dangerous.
+If you don&rsquo;t manage those things, then the simple act of composing will make the debugging difficult.
+You won&rsquo;t be able to know what to trust, not much better than the imperative or OOP style.</p>
+<p>So okay, you&rsquo;ll try to keep your functions pure to keep them composable.
+But what if you have to compose functions that <em>do have</em> side-effects?</p>
+<p>Well, luckily for you, there are people much smarter than you and I, who are paid to solve those kinds of problems, and their solutions are then integrated into languages or thrown to the side with many people not understanding why the hell do they need a PhD to write a <code>&quot;Hello World&quot;</code> to the console.</p>
+<p>So we will start simple, and hopefully you&rsquo;ll see the beauty.</p>
+<p>Let&rsquo;s take the simple act of getting an Nth element in the list:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_nth</span>(l, n):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> l[n]
+</span></span></code></pre></div><p>Well, the code is simple, right?
+Time to go home?</p>
+<p>There are obvious problems that you may also see: what if the Nth element doesn&rsquo;t exist?
+Well, let&rsquo;s strengthen our code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_nth</span>(l, n):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> len(l) <span style="color:#f92672">&gt;</span> n:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> l[n]
+</span></span></code></pre></div><p>Okay, now the function doesn&rsquo;t raise an exception if the Nth element doesn&rsquo;t exist.
+But what happens instead?
+If we try to use that element, we will get another type of exception: something to do with <code>NoneType</code>.
+How do you handle that?</p>
+<p>At this point most people (including naive and young me) would just say &ldquo;Fuck it&rdquo; and code around this limitation, while keeping it in mind.</p>
+<p>In the end, we have some specific goal in mind, not just a function that needs to access some Nth element.
+And so we would write around that limitation and we would achieve our goal.</p>
+<p>And all would be nice if that was a throwaway script.
+However more often than not, the code would become a part of a critical infrastructure.
+A ton more code would be written on top of that code, making it more difficult and more dangerous to change the code.</p>
+<p>My single <code>F</code> in the whole undergraduate degree came from the course where I had to choose an open-source project and contribute to it.
+I made a grave mistake to take my favorite Python project: Deluge.
+Needless to say, I couldn&rsquo;t make head nor tail of the project, and so I didn&rsquo;t do anything.</p>
+<p>So, if the code is bad, it can get really bad.
+What would happen first is that you would write a solution for a specific situation.
+And then you would need to change it a little.
+And then a little more.
+Then you would encounter more and more problems, because you&rsquo;re now breaking your invariants that existed only in your head (and not in your type system).
+And now simple code that resembled a &ldquo;happy path&rdquo; looks like an amalgamation of <code>if</code>s, <code>try/catch</code> and many more.
+And still it is a highly brittle code, a.k.a. legacy code.</p>
+<p>Now, the million-dollar question: why is that the case?</p>
+<p>Well, we know that it wasn&rsquo;t the case with pure functions.
+Pure functions can be substituted by a single value.
+We opened a pandora&rsquo;s box when we tried to work with <em>impure</em> functions, or those that have side-effects that are unaccounted for.</p>
+<p>On a side-note, the funny thing that would happen at this stage is that people would:</p>
+<ul>
+<li>hear that the functional programming is well-equipped with solving those kinds of problems,</li>
+<li>try out the FP concepts without understanding then</li>
+<li>half-assing them</li>
+<li>would make even more mess</li>
+<li>and then say that it is bad</li>
+</ul>
+<p>Unfortunately, there is some required background in CS.
+But more importantly, there&rsquo;s a specific mindset that is required when doing functional programming.
+FP has tendency to push you towards the right direction, but without the understanding, it would be for naught.</p>
+<p>But what would functional programmer would think when writing a code like that?</p>
+<p>Well.
+The first thing is that the question would be: &ldquo;Why are we writing a function that would need to access the Nth element?&rdquo;.</p>
+<p>And the answer is: &ldquo;We don&rsquo;t know&rdquo;.
+In fact, this function is really generic.
+It can be used for any reason.
+It is the same question as to why you would use the word &ldquo;long&rdquo;?
+Of course, you would use it to say that something is long.
+But you could also say that something is <em>longing</em> for something.</p>
+<p>You can&rsquo;t just take the word and shoehorn it into a specific domain.
+In that way, you can&rsquo;t just take a generic function and assign it implicit assumptions and hope that they won&rsquo;t get broken, because they most certainly will.</p>
+<p>Side-effects are those implicit assumptions.
+In our <code>get_nth(l, n)</code>, the assumption was that <code>n &lt; len(l)</code>.
+We know that everything is going to work if the assumption is correct.
+The problem is that we don&rsquo;t know what would happen if the assumption is <em>incorrect</em>.
+And usually what happens is the worst.</p>
+<p>Usually it is very difficult to debug, because something that was deemed impossible happens.</p>
+<p>For that reason when functional programmers write code, they write it with the idea in mind of what is it they are in fact doing.
+The reality is getting in the way.
+If the programming language has a strong and expressive type system, then basically programmers can write code as if they are writing a mathematical proof that their code is correct.
+If not, then, well, you deal with what you have and hope you have good discipline.</p>
+<p>So, the question is, how do we deal with side-effects?</p>
+<p>The answer is: head-on.
+Let&rsquo;s make the side-effects explicit.</p>
+<p>Again, there are several ways of doing what I am going to do, but what I&rsquo;m going to show you is the poor man&rsquo;s monads (yeah, those dreaded monads), so that in case of anything, you can at least manage to do something.</p>
+<p>So, let&rsquo;s get back to our example of <code>get_nth()</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_nth</span>(l, n):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> l[n]
+</span></span></code></pre></div><p>So, in a good case, we have our value.
+But in a bad case we have to deal with it somehow.
+But we can&rsquo;t give anything, because there&rsquo;s nothing.
+So let&rsquo;s give <code>nothing</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_nth</span>(l, n):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> len(l) <span style="color:#f92672">&gt;</span> n:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> some(l[n])
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> none()
+</span></span></code></pre></div><p>This is how the functional programmers would do it.</p>
+<p>I&rsquo;m pretty sure you&rsquo;re interested in what <code>some()</code> and <code>none()</code> do.
+Well, they are simple, but it is not so much important as to what they are, but how they must be used.</p>
+<p>Here are their definitions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">some</span>(x):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> (<span style="color:#e6db74">&#39;some&#39;</span>, x)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">none</span>():
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> (<span style="color:#e6db74">&#39;none&#39;</span>,)
+</span></span></code></pre></div><p>Those are the simple tuples.
+We will keep our data structures simple.</p>
+<p>What we did here, is (implicitly) defined our own type.
+This type is sometimes called <code>Option</code>, sometimes <code>Maybe</code>.
+But the idea is that this type represents two cases:</p>
+<ul>
+<li><code>Something</code> exists</li>
+<li><code>Nothing</code> exists</li>
+</ul>
+<p>So, we can wrap the value into our <code>Option</code> type.
+To extract it, we can write an extractor:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">value_of</span>(opt):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> opt[<span style="color:#ae81ff">1</span>]
+</span></span></code></pre></div><p>This would work as expected in case of <code>Some</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>print(value_of(some(<span style="color:#e6db74">&#34;There is some value!&#34;</span>)))
+</span></span></code></pre></div><p>However, we would have the same problem in case of <code>None</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>print(value_of(none())) <span style="color:#75715e"># throws exception</span>
+</span></span></code></pre></div><p>So we came back to our problem.</p>
+<p>At this point people would give up on FP, saying it is useless.
+But what can we do?</p>
+<p>Well, it is clear that you&rsquo;re not supposed to work with the underlying representation.
+First thing you can do is check if the value is <code>Some</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_some</span>(opt):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> opt[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;some&#39;</span>
+</span></span></code></pre></div><p>Then we can try to extract value from <code>Some</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">extract_value</span>(opt, default_value):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> is_some(opt):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> value_of(opt)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> default_value
+</span></span></code></pre></div><p>This is better, because it forces us to come up with the default value in case the our option value is actually <code>None</code>.
+But this approach requires a discipline.
+You must use <code>extract_value()</code> whenever you&rsquo;re working with <code>Option</code> types and not use the underlying structure.
+Also, it is not so easy to come up with the default value in each and every case.</p>
+<p>There must be a better option.
+Instead of extracting the value from the <code>Some</code>s, let&rsquo;s work on <code>Option</code>s directly.
+Of course, we can write functions that are aware that their arguments are <code>Option</code> types, but it would quickly become difficult and unwieldy to manage.</p>
+<p>Instead, we can write normal functions, and make them work with <code>Option</code> types.</p>
+<p>We do this by the use of <strong>functors</strong>.</p>
+<p>Now, another scary word.</p>
+<p>When functional programmers say something is a <code>functor</code>, what they mean is that there&rsquo;s an associated function <code>map</code>.
+And what they also mean, is that the function <code>map</code> has a specific type:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">map</span> <span style="color:#f92672">::</span> (a <span style="color:#f92672">-&gt;</span> b) <span style="color:#f92672">-&gt;</span> f a <span style="color:#f92672">-&gt;</span> f b
+</span></span></code></pre></div><p>Now, you already seen this style of writing type signatures, but it may seem scary, so let me make it less scary.</p>
+<p>The first <code>(a -&gt; b)</code> is a function, so the first argument to <code>map</code> is a function.
+A higher-ordered function.</p>
+<p>Now, what those <code>f a</code> and <code>f b</code> refer to?
+Well, the <code>f</code> in <code>f a</code> refers to <code>functor</code>.
+Basically a type for which <code>map</code> is defined.
+So <code>map</code> requires specific types for which that <code>map</code> is defined.
+Good?
+Good.</p>
+<p>While it is sounds bad, another way to look at it, is that the <code>map</code> generates a specific type of functor, which is dependent on context.</p>
+<p>In our case we have <code>Option</code>, so we could have written like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">map</span> <span style="color:#f92672">::</span> (a <span style="color:#f92672">-&gt;</span> b) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Option</span> a <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Option</span> b
+</span></span></code></pre></div><p>So now our function <code>map</code> takes some function from <code>a</code> to <code>b</code> and makes it a function that works on <code>Option a</code> and produces an <code>Option b</code>.</p>
+<p>For example we can make the function <code>len</code> work on strings that may or may not exist:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">map</span> <span style="color:#f92672">::</span> (<span style="color:#66d9ef">String</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Int</span>) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Option</span> <span style="color:#66d9ef">String</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Option</span> <span style="color:#66d9ef">Int</span>
+</span></span></code></pre></div><p>That&rsquo;s just one way to look at it.</p>
+<p>Remember, there&rsquo;s also a <code>map</code> in Python that maps each element in the list via <code>f()</code>?
+Well, now it is time to explain that.</p>
+<p>The word <code>map</code> actually comes from the <code>functor</code>.
+<code>map</code> basically means <code>functor</code>.
+Functor is just some structure that has associated <code>map</code> function.</p>
+<p>Python lists, turns out, are also a functor.
+For them the <code>map</code> function is defined as <code>[f(x) for x in l]</code>.</p>
+<p>But the reason why <code>map</code> is called <code>map</code> is because not the elements in the functor are being mapped, but because the normal function of type <code>a -&gt; b</code> is being mapped to a function <code>f a -&gt; f b</code>.</p>
+<p>What we are transforming are not values but functions.
+Think about that.</p>
+<p>Now, to be a valid <code>map</code> and <code>functor</code>, there is something called <em>functor laws</em>.
+But they are quite intuitive and not scary at all, so I won&rsquo;t be covering them <del>I&rsquo;m already tired writing all this stuff</del>.</p>
+<p>So, the questions now is: how do we implement <code>map</code> for our <code>Option</code>?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">map_opt</span>(f):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">foo</span>(opt):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> is_some(opt):
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> some(f(value_of(opt)))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> none()
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> foo
+</span></span></code></pre></div><p>Quite a mess.</p>
+<p>I mean Python.</p>
+<p>But what is happening, is that we take a function <code>f()</code>, and if our value is <code>Some(x)</code>, we extract that <code>x</code>, apply it to <code>f()</code> via <code>f(x)</code>, and wrap it back into <code>Some()</code> via <code>Some(f(x))</code>.
+Otherwise, if it is <code>None</code>, we just pass along that <code>None</code>.</p>
+<p>In OCaml this would have been written like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ocaml" data-lang="ocaml"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> map f opt <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">match</span> opt <span style="color:#66d9ef">with</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">|</span> <span style="color:#a6e22e">Some</span><span style="color:#f92672">(</span>x<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#a6e22e">Some</span><span style="color:#f92672">(</span>f x<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">|</span> <span style="color:#a6e22e">None</span> <span style="color:#f92672">-&gt;</span> <span style="color:#a6e22e">None</span>
+</span></span></code></pre></div><p>In Haskell this would have been written as (<code>Some -&gt; Just</code> and <code>None -&gt; Nothing</code>):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">map</span> f opt <span style="color:#f92672">=</span> <span style="color:#66d9ef">case</span> opt <span style="color:#66d9ef">of</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">Just</span> x <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Just</span> (f x)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">Nothing</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Nothing</span>
+</span></span></code></pre></div><p>Or even like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">map</span> f (<span style="color:#66d9ef">Just</span> x) <span style="color:#f92672">=</span> <span style="color:#66d9ef">Just</span> (f x)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">map</span> <span style="color:#66d9ef">_</span> <span style="color:#66d9ef">Nothing</span>  <span style="color:#f92672">=</span> <span style="color:#66d9ef">Nothing</span>
+</span></span></code></pre></div><p>Quite readable, compared to Python, isn&rsquo;t it.
+But those codes are equivalent, I assure you.</p>
+<p>Now, with this, we can make a function <code>len</code> that works on <code>Option</code>s:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>len_opt <span style="color:#f92672">=</span> map_opt(len)
+</span></span></code></pre></div><p>To check that it works, we need to additionally convert our <code>Option</code> to string:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">string_of</span>(opt):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> is_some(opt):
+</span></span><span style="display:flex;"><span>    v <span style="color:#f92672">=</span> value_of(opt)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Some(</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">)&#34;</span><span style="color:#f92672">.</span>format(v)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;None&#34;</span>
+</span></span></code></pre></div><p>And now:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>print(string_of(len_opt(some(<span style="color:#e6db74">&#34;Hello World!&#34;</span>)))) <span style="color:#75715e"># prints &#34;Some(12)&#34;</span>
+</span></span><span style="display:flex;"><span>print(string_of(len_opt(none(              )))) <span style="color:#75715e"># prints &#34;None&#34;</span>
+</span></span></code></pre></div><p>What we did might not seem much, probably because it is simple.
+But what is important, is that we have defined functions that work despite the presence of side effects.</p>
+<p>If we tried to take the <code>len()</code> of <code>None</code> directly, I&rsquo;m personally not sure what would happen, because I don&rsquo;t want to learn Python, but I suspect that the exception would happen.</p>
+<p>However, with <code>len_opt()</code> we have made a <em>total</em> function: that works in every case.
+And that is actually very powerful idea.
+We now don&rsquo;t need any <code>try/catch</code>.
+The code <em>just works</em>.</p>
+<p>Ain&rsquo;t that amazing?
+Eh?</p>
+<p>Now, with this out of the way, let&rsquo;s cover something else: <code>Applicative Functor</code>.</p>
+<p>Another scary term, but it is actually quite simple.</p>
+<p>Let&rsquo;s take a look at the <code>map</code> type signature:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">map</span> <span style="color:#f92672">::</span> (a <span style="color:#f92672">-&gt;</span> b) <span style="color:#f92672">-&gt;</span> f a <span style="color:#f92672">-&gt;</span> f b
+</span></span></code></pre></div><p>And also let&rsquo;s take a look at <code>add</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">add</span> <span style="color:#f92672">::</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Int</span>
+</span></span></code></pre></div><p>Now, the question, what would happen if we give <code>add</code> to <code>map</code>?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">map</span> add <span style="color:#f92672">::</span> <span style="color:#66d9ef">Option</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Option</span> (<span style="color:#66d9ef">Int</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Int</span>)
+</span></span></code></pre></div><p>How did this happen?</p>
+<p>Remember that the type of <code>add</code> is <code>Int -&gt; Int -&gt; Int</code>.
+If we try to match it with <code>a -&gt; b</code>, then <code>a == Int</code> and <code>b == Int -&gt; Int</code>.</p>
+<p>What this means is that we accidentially put a <em>function</em> inside a functor, instead of a value.
+What this means <em>for us</em> is that we can&rsquo;t simply apply values to those functions.</p>
+<p>So <code>Applicative Functor</code> solves that specific problem: <em>applies</em> values to a function inside a <em>functor</em>.
+Here&rsquo;s the type signature for <code>apply</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">apply</span> <span style="color:#f92672">::</span> f (a <span style="color:#f92672">-&gt;</span> b) <span style="color:#f92672">-&gt;</span> f a <span style="color:#f92672">-&gt;</span> f b
+</span></span></code></pre></div><p>That&rsquo;s basically it.</p>
+<p>In case of an option we can easily write one such <code>apply</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply_opt</span>(opt_f, opt_a):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> is_some(opt_f):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> map_opt(value_of(opt_f))(opt_a)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> none()
+</span></span></code></pre></div><p>This works because we first check if the <code>opt_f</code> is actually <code>Some(f)</code>, and if it is, then we just convert our <code>a -&gt; b</code> to <code>f a -&gt; f b</code> with <code>map</code>, and then apply <code>f a</code> to it.
+If it is <code>None</code>, then it is, well, <code>None</code>.</p>
+<p>Important note is that this <code>apply</code> function works with curried functions (you still remember what curried functions are, right?).</p>
+<p>So if we have our <code>add</code> function, this is how we would make it work with <code>Option</code>s:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>(a):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">foo</span>(b):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> a <span style="color:#f92672">+</span> b
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> foo
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>add_opt <span style="color:#f92672">=</span> map_opt(add)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>one <span style="color:#f92672">=</span> some(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>two <span style="color:#f92672">=</span> some(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(string_of(
+</span></span><span style="display:flex;"><span>  apply(add_opt(one), two)
+</span></span><span style="display:flex;"><span>))
+</span></span></code></pre></div><p>This doesn&rsquo;t look so nice, because it is, well, Python (I feel tired of mentioning and apologizing for Python at this point).</p>
+<p>In functional languages like Haskell and OCaml you can define your own custom operators, and in those languages they define <code>apply</code> as such:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span>(<span style="color:#f92672">&lt;*&gt;</span>) <span style="color:#f92672">=</span> apply
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span> x y <span style="color:#f92672">=</span> x <span style="color:#f92672">+</span> y
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add_opt</span> <span style="color:#f92672">=</span> map add
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">one</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">Just</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">two</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">Just</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(add_opt one) <span style="color:#f92672">&lt;*&gt;</span> two
+</span></span></code></pre></div><p>In fact, they define a custom operator for <code>map</code> as well, so this can be rewritten like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span>(<span style="color:#f92672">&lt;$&gt;</span>) <span style="color:#f92672">=</span> map
+</span></span><span style="display:flex;"><span>(<span style="color:#f92672">&lt;*&gt;</span>) <span style="color:#f92672">=</span> apply
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span> x y <span style="color:#f92672">=</span> x <span style="color:#f92672">+</span> y
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">one</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">Just</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">two</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">Just</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span> <span style="color:#f92672">&lt;$&gt;</span> one <span style="color:#f92672">&lt;*&gt;</span> two
+</span></span></code></pre></div><p>Now, when I first saw this, I thought it was ugly.
+Why would you need to have separate <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code>?</p>
+<p>The answer is: to satisfy type system.</p>
+<p>Sometimes type system is an annoying bitch.
+Because reality is an annoying bitch.</p>
+<p>But once you overcome that initial barrier and accept zen, you&rsquo;ll start to see the good things.
+For example if you had a function that sums 4 numbers instead of 2, you could have written like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">add_quad</span> a b c d <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b <span style="color:#f92672">+</span> c <span style="color:#f92672">+</span> d
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add_quad</span> <span style="color:#f92672">&lt;$&gt;</span> (<span style="color:#66d9ef">Just</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">&lt;*&gt;</span> (<span style="color:#66d9ef">Just</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">&lt;*&gt;</span> (<span style="color:#66d9ef">Just</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">&lt;*&gt;</span> (<span style="color:#66d9ef">Just</span> <span style="color:#ae81ff">4</span>)
+</span></span></code></pre></div><p>So instead of trying to write complex function that is aware of four <code>Option</code>s, we just <code>apply</code> values to our new function.</p>
+<p>In Python this&hellip; wouldn&rsquo;t be so nice.</p>
+<p>But we can somewhat mitigate it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lift_optA2</span>(f):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">foo</span>(a):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">bar</span>(b):
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> apply(map_opt(f)(a), b)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> bar
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> foo
+</span></span></code></pre></div><p>The term <code>lift</code> comes from <em>lifting</em> our values and functions into realm of side-effects (please don&rsquo;t look at me like that, I didn&rsquo;t come up with those silly terms).</p>
+<p>And now instead of this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>add_opt <span style="color:#f92672">=</span> map_opt(add)
+</span></span><span style="display:flex;"><span>print(string_of(
+</span></span><span style="display:flex;"><span>  apply(add_opt(one), two)
+</span></span><span style="display:flex;"><span>))
+</span></span></code></pre></div><p>We can write like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>add_opt <span style="color:#f92672">=</span> lift_optA2(add)
+</span></span><span style="display:flex;"><span>print(string_of(
+</span></span><span style="display:flex;"><span>  add_opt(one)(two)
+</span></span><span style="display:flex;"><span>)) <span style="color:#75715e"># prints &#34;Some(3)&#34;</span>
+</span></span></code></pre></div><p>We essentially treat <code>add_opt</code> as if it is a normal <code>add</code>!
+This is the power of applicative functors.
+We are coding with side effects as if those functions are pure!</p>
+<p>If you don&rsquo;t get this, well, take your time, because it is a big deal.
+This is what we were getting to all this time.
+All the immutability, pure functions and all the higher ordered functions were necessary for us to get to the point were we could write robust code in the face of side-effects.</p>
+<p>Now, the last part that is left to understand is the dreaded monads.
+When people are talking about <code>monads</code>, what they refer to is two things:</p>
+<ul>
+<li>constructor (in case of <code>Options</code> is <code>some(x)</code>)</li>
+<li>bind (also written as &raquo;= or<code>&gt;&gt;=</code>)</li>
+</ul>
+<p>What bind essentially does, is sequence functions that do side effects, i.e. functions that are of type <code>a -&gt; f b</code>.</p>
+<p>Here how the bind is defined in case of <code>Option</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">bind</span>(opt_a):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">foo</span>(f):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> is_some(opt_a):
+</span></span><span style="display:flex;"><span>      v <span style="color:#f92672">=</span> value_of(opt_a)
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> f(v)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> none()
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> foo
+</span></span></code></pre></div><p>The type signature of <code>bind</code> is this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">bind</span> <span style="color:#f92672">::</span> f a <span style="color:#f92672">-&gt;</span> (a <span style="color:#f92672">-&gt;</span> f b) <span style="color:#f92672">-&gt;</span> f b
+</span></span></code></pre></div><p>So what is effectively does, is take a value in some context (affected by side-effects) and applies a side-effecting function to it.</p>
+<p>The weird order of arguments has to do with the fact, that <code>bind</code> is often declared as a custom operator <code>&gt;&gt;=</code> (also written as &raquo;=), this allows to sequence the functions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">foo</span> x <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>  x <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#a6e22e">\</span>v1 <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>  f v1 <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#a6e22e">\</span>v2 <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>  g v2 <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#a6e22e">\</span>v3 <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> is_even v3 <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    return true
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    h v2
+</span></span></code></pre></div><p>This is an imaginary side-effects-aware code in Haskell.
+<code>v1</code>, <code>v2</code> and <code>v3</code> refer to values in case the functions before them worked out nicely.
+The code follows a &ldquo;happy path&rdquo;, but in case there are problems, they are handled by the <code>bind</code> or the <code>&gt;&gt;=</code> operator in the background.</p>
+<p>This is another power of functional programming: you think through the concepts and leverage the power of the ideas to make the programming language work for you, instead against of you.</p>
+<p>Now, hopefully you see that the power of <code>Option</code> comes not from the fact that it represents <code>Some</code> and <code>None</code>, but from the way we structure our code in such a way to keep working with those values in a consistent manner.
+Despite the presence of the side-effects.</p>
+<p>Also, <code>Option</code> is just one side-effect that exists there.
+There are many more and they can be as general or as domain-specific as you like.
+You can even write a monad to reliably work specifically with a MySQL for example.</p>
+<p>The main idea is to be aware of the ideas and side-effects at hand.</p>
+<h1 id="bonus-programming-as-proofs">Bonus: programming as proofs<a href="#bonus-programming-as-proofs" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>At this point when you start to take advantage of all the advanced concepts of functional programming and start to read academical papers on CS and Category Theory, you&rsquo;ll start to feel as if you&rsquo;re not programming, but actually writing a proof of the idea that you have in mind and computer is just there to verify your ideas.</p>
+<p>And in fact this is not exactly far-fetched.
+If you have heard about <code>coq</code>, it does exactly that.
+Coq is a proof-assistant.</p>
+<p>We have taught computers to verify mathematical proofs for us.
+Isn&rsquo;t it marvelous?!</p>
+<p>While I&rsquo;m getting into a territory that I don&rsquo;t understand, Coq leverages the Curry-Howard correspondance.
+TL;DR it states that properly written computer program corresponds to some mathematical proof.
+If you&rsquo;re writing a function of type <code>a -&gt; b</code>, you&rsquo;re actually writing a proof that if <code>a</code>, then <code>b</code>.
+In fact, OCaml was initially developed with idea of writing a Coq in it.
+So sometimes you can feel the mathematical roots of OCaml and writing in it sometimes feels like writing proofs.
+It is not accidential.</p>
+<p>Of course, there&rsquo;s no problem if you don&rsquo;t understand this or if it doesn&rsquo;t work in your language: you need sufficiently strong type system to model your propositions.</p>
+<p>But the idea is that the types are actually a very strong concept that helps you <em>reason</em> about the programs.
+Types are actually so powerful, they can encode the complex logic in their own fact of existance.
+This is what classes are supposed to do, but properly using classes at some point becomes just another form of functional programming.</p>
+<p>There is a good wealth of materials on type theory.
+Good thing that math is thousand years old and that we have much better understanding of it than of Computer Science, isn&rsquo;t it?</p>
+<h1 id="closing-thoughts">Closing thoughts&hellip;<a href="#closing-thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Thank you for reaching till this part.
+It must have been some journey, eh?</p>
+<p>But if you reached till here, it means that your journey for you is just beginning.
+There are still so many things to learn about functional programming.</p>
+<p>The thing I like the most is that when I learn more about functional programming, I somehow end up learning more about the world we live in.
+I somehow become a bit more profecient in philosophy and reasoning.
+I start to understand other people.
+I start to understand what the people are trying to do with economies.</p>
+<p>It is surprising.</p>
+<p>I also start to get appreciation for really good ideas.
+When you discover them, you start to squeel with delight.
+Because really good ideas are rare, but when you discover one, it sticks with you till the end of your life.</p>
+<p>Nothing of this would have been possible without functional programming in my life.</p>
+<p>And for you who are coding in Python, try giving other languages a try.
+Even if you won&rsquo;t code in them professionally (or ever), at least your proficiency in Python will become better.
+What I hate more than Python is bad Python code that makes other people&rsquo;s lives misereable.</p>
+<p>Let&rsquo;s try to make the world a better place.</p>
+<p>Hope to see you soon&hellip;</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="/posts/so-you-want-to-fp-ii/">
+                <span class="button__text">So You Want to Functional Programming (Part II)</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2024 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.js" onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

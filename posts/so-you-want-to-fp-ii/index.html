@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>So You Want to Functional Programming (Part II) :: Terminal</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Higher order functions Functional programmers are all about making things better.
+The problem is that we don&amp;rsquo;t know how to make things better.
+So we tend to explore different ideas. And most of them don&amp;rsquo;t work. But some turn out to be surprisingly effective. So much so, the other languages tend to get those ideas into their own languages and then when you try to argue why you should learn a proper functional programming language, people look at you like crazy, saying that they already have all the fancy functional programming stuff in their language and that they already know what it is, while their code is still 90% imperative and state mutating shit." />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/so-you-want-to-fp-ii/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/orange.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/orange.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="So You Want to Functional Programming (Part II)">
+<meta property="og:description" content="Higher order functions Functional programmers are all about making things better.
+The problem is that we don&amp;rsquo;t know how to make things better.
+So we tend to explore different ideas. And most of them don&amp;rsquo;t work. But some turn out to be surprisingly effective. So much so, the other languages tend to get those ideas into their own languages and then when you try to argue why you should learn a proper functional programming language, people look at you like crazy, saying that they already have all the fancy functional programming stuff in their language and that they already know what it is, while their code is still 90% imperative and state mutating shit." />
+<meta property="og:url" content="/posts/so-you-want-to-fp-ii/" />
+<meta property="og:site_name" content="Terminal" />
+
+  
+  
+  <meta property="og:image" content="/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2024-02-22 13:50:44 &#43;0900 JST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="orange">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Terminal
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="/showcase">Showcase</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about" >About</a></li>
+        
+      
+        
+          <li><a href="/showcase" >Showcase</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/so-you-want-to-fp-ii/">So You Want to Functional Programming (Part II)</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2024-02-22</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h1 id="higher-order-functions">Higher order functions<a href="#higher-order-functions" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Functional programmers are all about making things better.</p>
+<p>The problem is that we don&rsquo;t know how to make things better.</p>
+<p>So we tend to explore different ideas.
+And most of them don&rsquo;t work.
+But some turn out to be surprisingly effective.
+So much so, the other languages tend to get those ideas into their own languages and then when you try to argue why you should learn a proper functional programming language, people look at you like crazy, saying that they already have all the fancy functional programming stuff in their language and that they already know what it is, while their code is still 90% imperative and state mutating shit.
+Sorry, nasty flashbacks.</p>
+<p>Anyhow, one of the sources of bugs is the constant repitition.
+There are many boilerplate code that you have to write for some reason, and that people hope that AI will manage all of those things.</p>
+<p>Boilerplate code is such a problem, seemingly most of the research in computer science is about making the code-reuse as easy as possible.
+Remember inheritence?
+Its main selling point was the easy code reuse: just inherit from the class whose code you want to use.
+It took people a while to realize that it is a bad idea <del>composition over inheritence</del>.</p>
+<p>I know it is hard to tell, but functional programmists are also human.
+And turns out we also don&rsquo;t like boilerplate code.</p>
+<p>And so, we found our ways around it.
+The reason people don&rsquo;t know about it or they have difficulties understanding that concept is because of heavy influence of C.
+People know functions from C (which are actually procedures, i.e. variables for storing code), so the things that C funcitons don&rsquo;t do must be impossible.</p>
+<p>However, that is not the case.
+You know, we have dependency injection of our own.</p>
+<p>Let&rsquo;s take a look back at one of our examples:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_left_to_right</span>(l):
+</span></span><span style="display:flex;"><span>  sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(l)):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;Currently on: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(i))
+</span></span><span style="display:flex;"><span>    sum <span style="color:#f92672">+=</span> l[i]
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> sum
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_right_to_left</span>(l):
+</span></span><span style="display:flex;"><span>  sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(l) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;Currently on: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(i))
+</span></span><span style="display:flex;"><span>    sum <span style="color:#f92672">+=</span> l[i]
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> sum
+</span></span></code></pre></div><p>As you can see, those two functions are basically the same.
+The only difference is how we go through the range.
+So this function could be abstracted like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_over_range</span>(l, _range):
+</span></span><span style="display:flex;"><span>  sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> _range:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;Currently on: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(i))
+</span></span><span style="display:flex;"><span>    sum <span style="color:#f92672">+=</span> l[i]
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> sum
+</span></span></code></pre></div><p>So now if you want to do summation from left to right or right to left, you just pass the proper range, like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sum_generic(l, range(len(l)))
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># or</span>
+</span></span><span style="display:flex;"><span>sum_generic(l, range(len(l) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>))
+</span></span></code></pre></div><p>But that doesn&rsquo;t look so nice, especially since you may easily forget which argument is which.
+There are ways to do that, but we don&rsquo;t have necessary tools to do that just yet.
+So let&rsquo;s come back to that problem later.</p>
+<p>Believe it or not, but you&rsquo;ve already been exposed to functional programming in your school.
+You probably know this symbol: <code>Σ</code>.
+Unfortunately, it doesn&rsquo;t look so nice in this blog post and I haven&rsquo;t figured how to draw LaTeX expressions using JavaScript <del>(damn you, webpack!)</del>.
+So let&rsquo;s write it like this:</p>
+<pre tabindex="0"><code>  N
+ sum { i } = N * (N + 1) / 2
+i = 1
+</code></pre><p>The way we would write in Python:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_n</span>(l):
+</span></span><span style="display:flex;"><span>  s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> l:
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">+=</span> x
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> s
+</span></span></code></pre></div><p>This is good.
+But now imagine that we have to sum squares:</p>
+<pre tabindex="0"><code>  N              N(N + 1)(2N + 1)
+ sum { i * i } = ----------------
+i = 1                   6
+</code></pre><p>No problem, let&rsquo;s write it in Python:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_sq</span>(l):
+</span></span><span style="display:flex;"><span>  s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> l:
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">+=</span> x <span style="color:#f92672">*</span> x
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> s
+</span></span></code></pre></div><p>Nice, easy-peasy. But now we are asked to sum the square roots:</p>
+<pre tabindex="0"><code>  N
+ sum { sqrt(i) } = ???
+i = 1
+</code></pre><p>While I don&rsquo;t know the equation for that, we can still write the code that does this for us:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_sqrt</span>(l):
+</span></span><span style="display:flex;"><span>  s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> l:
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">+=</span> sqrt(x)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> s
+</span></span></code></pre></div><p>It was easy, but hopefully you&rsquo;re starting to see the problem now.
+Let&rsquo;s look at the code that we&rsquo;ve written:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_n</span>(l):
+</span></span><span style="display:flex;"><span>  s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> l:
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">+=</span> x
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> s
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_sq</span>(l):
+</span></span><span style="display:flex;"><span>  s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> l:
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">+=</span> x <span style="color:#f92672">*</span> x
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> s
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_sqrt</span>(l):
+</span></span><span style="display:flex;"><span>  s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> l:
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">+=</span> sqrt(x)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> s
+</span></span></code></pre></div><p>We basically wrote the same code several times.
+The only thing that is changing is the term that we sum over.
+The terms are:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">*</span> x
+</span></span><span style="display:flex;"><span>sqrt(x)
+</span></span></code></pre></div><p>Let&rsquo;s look at the mathematical expressions:</p>
+<pre tabindex="0"><code>  N
+ sum { i }
+i = 1
+
+  N
+ sum { i * i }
+i = 1
+
+  N
+ sum { sqrt(i) }
+i = 1
+</code></pre><p>Those are awfully similar as well, and the only parts that are changing are:</p>
+<pre tabindex="0"><code>i
+i * i
+sqrt(i)
+</code></pre><p>They are basically the same!
+That is not a coincidence.</p>
+<p>Let&rsquo;s look at the same part of the mathematical expression:</p>
+<pre tabindex="0"><code>  N
+ sum { ... }
+i = 1
+</code></pre><p>What this expression says, is to sum the terms described in the <code>{...}</code>.
+In fact, we can write it like this:</p>
+<pre tabindex="0"><code>  N
+ sum  f(i)
+i = 1
+</code></pre><p>Turns out, we can do the same in the Python code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_generic</span>(l, f):
+</span></span><span style="display:flex;"><span>  s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> l:
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">+=</span> f(x)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> s
+</span></span></code></pre></div><p>It is basically the same code, with some key difference: we are passing <code>f()</code> to <code>sum_generic()</code>.</p>
+<p>&ldquo;Passing functions as arguments?&rdquo; you might be asking.
+If it is your first time seeing this, this is a quite important and powerful idea that you&rsquo;ll be seeing often.</p>
+<p>Now we can write our <code>sum_n()</code>, <code>sum_sq()</code> and <code>sum_sqrt()</code> in terms of <code>sum_generic()</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_n</span>(l):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> sum_generic(l, <span style="color:#66d9ef">lambda</span> x: x)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_sq</span>(l):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> sum_generic(l, <span style="color:#66d9ef">lambda</span> x: x <span style="color:#f92672">*</span> x)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_sqrt</span>(l):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> sum_generic(l, <span style="color:#66d9ef">lambda</span> x: sqrt(x))
+</span></span></code></pre></div><p>Here <code>lambda</code> is just a function that accepts an argument x.
+Essentially lambda is an anonymous function.</p>
+<p>In functional programming we use functions for almost everything, even minute things, but it is still difficult to come up with meaningful names, so <code>lambda</code> is a way to create functions on the fly (and not give them names).</p>
+<p>Now the obligatory explanation of higher ordered functions.</p>
+<p>In the C language, functions are just a way for you to structure sequence of instructions.
+You just give them a name and then invoke those instructions with a name.
+In a sense, you could write down those instructions with a macros instead, and they would still act the same.</p>
+<p>However, higher ordered functions allow you several things:</p>
+<ul>
+<li>They can accept other functions as their input arguments</li>
+<li>They can return functions as a result</li>
+<li>Those functions can be stored in a variable</li>
+</ul>
+<p>Hopefully you can see that the idea of the higher ordered function is not as scary as it seems, although the words may sound scary or obscure (math people are meanies, I&rsquo;m sorry).</p>
+<p>Higher ordered functions are such a powerful and useful idea, that people would hack Python to provide those capabilities, by generating code that is similar to lambdas and then evaluate it, or by changing AST, despite Guido&rsquo;s thinking otherwise about lambdas.
+In the end, Guido allowed it, but the lambdas are half-assed, unfortunately.
+This is something we have to live with.</p>
+<p>Additionally, higher ordered functions exist even in C++ (since C++11!).
+While their type is difficult to nail down properly, you can use templates to help you out:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> Fn<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> some_function(Fn f, <span style="color:#66d9ef">int</span> x){
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">f</span>(x);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+</span></span><span style="display:flex;"><span>  std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> some_function([](<span style="color:#66d9ef">int</span> x){ <span style="color:#66d9ef">return</span> x <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>; }, <span style="color:#ae81ff">3</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>While the idea of higher order functions may seem simple, there&rsquo;s one important reason that many math people get overly excited about them: when providing a function <code>f()</code>, you can create a new function <code>g()</code> that can do some more extended things, more than <code>f()</code> could!
+We&rsquo;ll see examples of it in the future, if you stick around, but for now just keep the idea in the back of your mind.</p>
+<p>Now, the question is: how exactly do you use the higher ordered functions?</p>
+<p>Well, you may have had this thought a lot: &ldquo;Okay, let&rsquo;t write <code>for</code> again&hellip;&rdquo;, and then you&rsquo;d write a code similar to this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(a)):
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># busy doing computations with a[i]</span>
+</span></span><span style="display:flex;"><span>  b[i] <span style="color:#f92672">=</span> <span style="color:#f92672">...</span> <span style="color:#75715e"># do some computation</span>
+</span></span></code></pre></div><p>From what I can see, this can be abstracted away like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(a)):
+</span></span><span style="display:flex;"><span>  b[i] <span style="color:#f92672">=</span> f(a[i])
+</span></span></code></pre></div><p>where <code>f()</code> is some function that does all the computations that we did.</p>
+<p>Let&rsquo;s write a function that abstracts away this boilerplate code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">map</span>(a, f):
+</span></span><span style="display:flex;"><span>  b <span style="color:#f92672">=</span> [<span style="color:#66d9ef">None</span>] <span style="color:#f92672">*</span> len(a)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> i, x <span style="color:#f92672">in</span> enumerate(a):
+</span></span><span style="display:flex;"><span>    b[i] <span style="color:#f92672">=</span> f(x)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> b
+</span></span></code></pre></div><p>The reason we picked the name <code>map</code> is because map is a name often used for this kind of function: which takes some function <code>f()</code> and applies it to each element of some list <code>a</code> and produces a new list <code>b</code>.</p>
+<p>In reality, <code>map</code> doesn&rsquo;t need to work on lists only, but this, and the reason why this function is called <code>map</code> will be covered later.</p>
+<p>On the side note, the more declarative way to write this, is to do it like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">map</span>(a, f):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> [f(x) <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> a]
+</span></span></code></pre></div><p>If it trips you up, just stop and think for a while.
+If it doesn&rsquo;t make sense, think of a set theory.
+What is a set theory?
+Well, set theory is what happens when you try to give names to things that you took for granted.</p>
+<p>Anyway, there&rsquo;s a function called <code>map</code>, that does the similar thing as the <code>map</code> that we defined.
+The only difference, is that while our versions return <code>list</code>, the Python versions return an iterator.
+The reason will become obvious later, but if you want to use python versions, don&rsquo;t forget to transform them to list:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>list(map(<span style="color:#f92672">...</span>))
+</span></span></code></pre></div><p>So, map is one of the functions that we often use, because it comes from the imperative for loop.
+Another thing that we would often do is something like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> a:
+</span></span><span style="display:flex;"><span>  s <span style="color:#f92672">+=</span> f(x)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># do something with s</span>
+</span></span></code></pre></div><p>This is something that functional programmers also often use.
+The names are <code>reduce()</code>, <code>fold()</code>, <code>left_fold()</code>, <code>right_fold()</code>, etc.
+Let&rsquo;s write our own:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">reduce</span>(a, f, initial <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>):
+</span></span><span style="display:flex;"><span>  acc <span style="color:#f92672">=</span> initial
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> a:
+</span></span><span style="display:flex;"><span>    acc <span style="color:#f92672">=</span> f(acc, x)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> acc
+</span></span></code></pre></div><p>Here <code>f(acc, x)</code> is a function that takes two parameters:</p>
+<ul>
+<li>The accumulator (<code>acc</code>)</li>
+<li>The value (<code>x</code>)</li>
+</ul>
+<p>Essentially the function <code>f()</code> tells the reduce how to combine, or <code>reduce</code> the values in the list to one value.
+So if we want to write a sum function, we need to write how to combine the values into a sum:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">addition</span>(acc, x):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> acc <span style="color:#f92672">+</span> x
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum</span>(l):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> reduce(l, addition, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>sum([<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>])
+</span></span></code></pre></div><p>We can describe many different functions using <code>reduce()</code>.
+For example we can calculate the length of the array:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">length</span>(acc, _):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">len</span>(l):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> reduce(l, length, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>len([<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>])
+</span></span></code></pre></div><p>Essentially, for every element in the list we do <code>+1</code> to the accumulator.
+That is in the essence the definition of the length of the list.</p>
+<p>Or we can find the maximum in a list:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_max</span>(acc, v):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> acc <span style="color:#66d9ef">if</span> acc <span style="color:#f92672">&gt;</span> v <span style="color:#66d9ef">else</span> v
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">my_max</span>(l):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> reduce(l, _max, MIN_LIMIT) <span style="color:#75715e"># MIN_LIMIT is impossibly small value</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>my_max([<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>])
+</span></span></code></pre></div><p><code>reduce()</code> is a ubiquious tool in the toolbox of functional programmers, so get used to it.
+<code>fold</code> is just another way to say <code>reduce</code>: the list is being <code>fold</code>ed into a single value, instead of being <code>reduce</code>d.</p>
+<p>While this makes sense, what about <code>fold_left</code> and <code>fold_right</code>?</p>
+<p>Since the functions <code>fold_left</code> and <code>fold_right</code> are pure, they can be rewritten like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>fold_left (l, f, init) <span style="color:#f92672">=</span> f(f(f(f(init, l[<span style="color:#ae81ff">0</span>]), l[<span style="color:#ae81ff">1</span>]), l[<span style="color:#ae81ff">2</span>]), <span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>fold_right(l, f, init) <span style="color:#f92672">=</span> f(f(f(f(init, l[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]), l[<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>]), l[<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>]), <span style="color:#f92672">...</span>)
+</span></span></code></pre></div><p>If it doesn&rsquo;t make sense, then assuming that <code>∘</code> is some arbitary binary operator and that all types are consistent, then we can rewrite it like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>fold_left (l, <span style="color:#960050;background-color:#1e0010">∘</span>, init) <span style="color:#f92672">=</span> ((((init <span style="color:#960050;background-color:#1e0010">∘</span> l[<span style="color:#ae81ff">0</span>]) <span style="color:#960050;background-color:#1e0010">∘</span> l[<span style="color:#ae81ff">1</span>]) <span style="color:#960050;background-color:#1e0010">∘</span> l[<span style="color:#ae81ff">2</span>]) <span style="color:#960050;background-color:#1e0010">∘</span> <span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>fold_right(l, <span style="color:#960050;background-color:#1e0010">∘</span>, init) <span style="color:#f92672">=</span> (<span style="color:#f92672">...</span> <span style="color:#960050;background-color:#1e0010">∘</span> (l[<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>] <span style="color:#960050;background-color:#1e0010">∘</span> (l[<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#960050;background-color:#1e0010">∘</span> (l[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#960050;background-color:#1e0010">∘</span> init))))
+</span></span></code></pre></div><p>This is something called equational reasoning (remember the first part and Physics example?).
+By equalizing two sides, we can say that one is equal to another.
+This is a powerful tool in the hands of a functional programmer.
+Pay close attention to that.</p>
+<p>What it tells us in this case, is that the <code>fold_left</code> and <code>fold_right</code> behave as if inserting some binary operator between each of the elements in the list.
+The difference, is that in case of <code>fold_left</code>, we are moving from left to right.
+The <em>associativity</em> is <code>left</code>.</p>
+<p>In case of <code>fold_right</code> we are moving from right to left.
+The <em>associativity</em> is <code>right</code>.</p>
+<p>If it feels arbitary, the reason is because it is.
+I may be wrong, so when you&rsquo;re using your language&rsquo;s <code>fold_left</code> and <code>fold_right</code>, please consult the documentation.</p>
+<p>And another thing, I may have lied about <code>reduce</code> and <code>fold</code>.
+They are not exactly the same thing.</p>
+<p>In case of <code>fold</code>, you have to provide an initial element.
+But in case of <code>reduce</code>, the initial element is the first (or last) element of the list.</p>
+<p>Or I&rsquo;m lying again.</p>
+<p>Anyway, nice to know, right?</p>
+<p>Well, there&rsquo;s another function that we often use and in fact gets implemented in almost every other mainstream language.
+The use case for that function, I&rsquo;ll be honest, not so clear, until you try to use it.
+But here it is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">magical_function</span>(l, p):
+</span></span><span style="display:flex;"><span>  res <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> l:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> p(x) <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>      res <span style="color:#f92672">=</span> res <span style="color:#f92672">+</span> [x]
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> res
+</span></span></code></pre></div><p>Now, what is function <code>p()</code>?
+In mathematical language this is called a <em>predicate</em>.
+It is a fancy name for a function who&rsquo;s return type is a <code>bool</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">p</span>(x: any) <span style="color:#f92672">-&gt;</span> bool:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># predicate function</span>
+</span></span></code></pre></div><p>You may have seen it, but more like part of an SQL query:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> name <span style="color:#66d9ef">FROM</span> accounts <span style="color:#66d9ef">WHERE</span> name <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;D%&#39;</span> <span style="color:#75715e">-- select all names starting with &#34;D&#34;
+</span></span></span></code></pre></div><p>In Python, equivalent imperative code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>names_starting_with_d <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> acc <span style="color:#f92672">in</span> accounts:
+</span></span><span style="display:flex;"><span>  name <span style="color:#f92672">=</span> name_of(acc)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> name<span style="color:#f92672">.</span>startswith(<span style="color:#e6db74">&#34;D&#34;</span>):
+</span></span><span style="display:flex;"><span>    names_starting_with_d<span style="color:#f92672">.</span>append(name)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># use names_starting_with_d</span>
+</span></span></code></pre></div><p>Kinda boilerplatey, eh?
+Compared to nice SQL version.</p>
+<p>In my case, I often used this function when working with a set of data received from some REST API and then making sure it matches some specific criteria, because the data is really volatile and comes in different shapes.
+<code>filter</code> is what brings back sense and structure into my dataflow, even if I have to remove bad apples.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>l <span style="color:#f92672">=</span> list(range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">11</span>))
+</span></span><span style="display:flex;"><span>is_even <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x: x <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>print(magical_function(l, is_even)) <span style="color:#75715e"># prints [2, 4, 6, 8, 10]</span>
+</span></span></code></pre></div><p>There&rsquo;s another way to achieve this result, using list comprehensions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>print([x <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">11</span>) <span style="color:#66d9ef">if</span> x <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># prints [2, 4, 6, 8, 10]</span>
+</span></span></code></pre></div><p>Overall the syntax for list comprehensions is way better in Python because it is functional and declarative by design.
+However, composing them is a pain, especially when you don&rsquo;t know how exactly the variables get captured, so you have to do alpha-conversion by hand (another fancy name for renaming variables to avoid confusion and conflicts).</p>
+<p>This is nice and dandy, but what so special about them?
+Well, nothing really, the ideas are simple.
+We will get more into the implications once we get a stronger base, but for now, just use the functions however you like.
+Afterall, the joy of learning is in experimenting and making mistakes.
+The most important aspects to keep in mind, is that the functions are pure, we are just transforming the data, and we do it without changing the data we were not supposed to change (immutability, remember?).</p>
+<p>So, when you try to do things more and more declaratively, you&rsquo;ll realize that you need more and more functions.</p>
+<p>For example, you have a list <code>['a', 'b', 'c', 'd']</code>, and you want it to have dashes interspersed:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">assert</span> intersperse([<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>, <span style="color:#e6db74">&#39;d&#39;</span>], <span style="color:#e6db74">&#39;-&#39;</span>) <span style="color:#f92672">==</span> [<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;-&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;-&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>, <span style="color:#e6db74">&#39;-&#39;</span>, <span style="color:#e6db74">&#39;d&#39;</span>]
+</span></span></code></pre></div><p>Or for example you have two lists and you want to zip them:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">assert</span> zip([<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>], [<span style="color:#e6db74">&#39;d&#39;</span>, <span style="color:#e6db74">&#39;e&#39;</span>, <span style="color:#e6db74">&#39;f&#39;</span>]) <span style="color:#f92672">==</span> [(<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;d&#39;</span>), (<span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;e&#39;</span>), (<span style="color:#e6db74">&#39;c&#39;</span>, <span style="color:#e6db74">&#39;f&#39;</span>)]
+</span></span></code></pre></div><p>Or you want to shift the elements in the list by some <code>n</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">assert</span> shift([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>], <span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">1</span>]
+</span></span></code></pre></div><p>There are many functions that are simple, but can be quite powerful.</p>
+<p>Again, to make the most use of them, the idea is to make them composable.</p>
+<p>While the functions shown in the examples are not higher-ordered functions like <code>map</code>, <code>reduce</code> and <code>filter</code>, there are many functions that you need to use to achieve your goals and simply using &ldquo;the trifecta&rdquo; won&rsquo;t be enough, so keep your eyes and mind open.</p>
+<p>Also, there are some performance implications for using those functions: they are working on immutable lists, so in theory it means a new copy each and every time.</p>
+<p>Remember when I said that the <code>map</code> returns iterator?
+Well, the thing is that you may find yourself composing <code>map()</code> with each other, or <code>map()</code> with <code>filter()</code> and so on.
+So instead of creating a new copy of a list each and every function call, the methods return iterator and then you generate the list only when you actually need to.
+This is some sort of optimization, but it is an &ldquo;accidential complexity&rdquo; still.</p>
+<p>For that reason, there are several things that you can do:</p>
+<ul>
+<li>Minimize the amount of data you work on: instead of using <code>map</code> and then <code>filter</code>, try <code>filter</code>ing first and then <code>map</code>ping.</li>
+<li>If you have several <code>map</code> functions, try to turn it into one <code>map</code> (and suffer style deductions):</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>map(f, map(g, map(h, l))) <span style="color:#f92672">~&gt;</span> map((<span style="color:#66d9ef">lambda</span> x: f(g(h(x)))), l)
+</span></span></code></pre></div><ul>
+<li>If you really need performance, then use side-effects like mutation, but make sure that the function is pure when observed from <em>outside</em>!
+Make sure the side effects don&rsquo;t leak outside of your function.</li>
+<li>Perform actions in parallel (if they can be done so, like <code>map</code> and <code>reduce</code>, and <code>filter</code>)</li>
+</ul>
+<p>If still, none of the solutions are fast enough, try to think if you really need that speed.
+And if you do, well, you are free to abandon the purity and composability alltogether.
+The most important part is that you know what you&rsquo;re doing.</p>
+<p>You&rsquo;re a professional after all.</p>
+<p>Well, we&rsquo;re almost done with the higher ordered functions.
+Let&rsquo;s just cover some of the concepts and ideas that rear their heads here and there all over the place in functional programming languages: <em>currying</em> and <em>piping</em>.</p>
+<p>They are simple, trust me.</p>
+<p>One of the reasons you weren&rsquo;t able see all the interesting functional programming ideas is because the languages themselves don&rsquo;t actively push you towards discovering those ideas, or worse yet, actively prevent you from coding in a pure and manageable style.</p>
+<p>So those things you haven&rsquo;t seen, well, because people usually don&rsquo;t code like that.</p>
+<p>You remember the talk about functions being composable?
+Well, the composability is really the important aspect that we are trying to achieve (sometimes to our own detriment).
+The more we code with simple functions, the more we feel the need to compose functions.
+But if we can&rsquo;t compose functions, we curse, give up hope and get angry at the functional programming style for being useless and wasting our precious time that we could have spent on TikTok, Instagram and Twitter instead.</p>
+<p>Imagine some magical function like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>res <span style="color:#f92672">=</span> pipe(accounts,[
+</span></span><span style="display:flex;"><span>  get_boys,
+</span></span><span style="display:flex;"><span>  get_adults,
+</span></span><span style="display:flex;"><span>  extract_names,
+</span></span><span style="display:flex;"><span>  names_starting_with_a,
+</span></span><span style="display:flex;"><span>  capitalize
+</span></span><span style="display:flex;"><span>])
+</span></span><span style="display:flex;"><span>print(res)
+</span></span></code></pre></div><p>While we don&rsquo;t know how those <code>get_boys</code>, <code>get_adults</code>, <code>extract_names</code> etc. are implemented, we kind of get the idea of what is going on.
+This code is easy to understand.
+One would say that it is encapsulation (which I think it is not, it is just good code).</p>
+<p>This thing is called <code>pipe</code>, and the process of using <code>pipe</code> is called <em>piping</em> (I told you it was easy).
+The idea is that we take the output of the previous function and make it an input of the next function.
+It is a <code>pipe</code> as in bash, shell, etc. (please tell me you know what bash is&hellip;)
+We provide initial argument (in this case <code>accounts</code>), and then pass it to an initial function and then go on.</p>
+<p>This is simple to understand, but we have a problem: the application of the function must be delayed somehow.</p>
+<p>Well, it is simple, if we know what <em>currying</em> is (no, it has nothing to do with curry, and no, I don&rsquo;t know why it is called <code>currying</code>, please don&rsquo;t ask me that).</p>
+<p>If you start to get into Haskell, you&rsquo;ll start to see something like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">add</span> <span style="color:#f92672">::</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Int</span>
+</span></span></code></pre></div><p>This is how type signatures are done in Haskell.
+When I was looking at that, I couldn&rsquo;t understand why it is done like this.</p>
+<p>If you don&rsquo;t want to understand why it is done like that, then the simple explanation that the last item is the return type, and everything before that is the type that it accepts:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">add</span> <span style="color:#f92672">::</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Int</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">^</span>      <span style="color:#f92672">^</span>      <span style="color:#f92672">^</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">|</span>      <span style="color:#f92672">|</span>      <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">|</span>      <span style="color:#f92672">|</span>  return <span style="color:#66d9ef">type</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">|</span>    arg2
+</span></span><span style="display:flex;"><span>      arg1
+</span></span></code></pre></div><p>Quite simple.</p>
+<p>The code for that function looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">add</span> <span style="color:#f92672">::</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Int</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span> x y <span style="color:#f92672">=</span> x <span style="color:#f92672">+</span> y
+</span></span></code></pre></div><p>In Python it would be something like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>(x, y): <span style="color:#66d9ef">return</span> x <span style="color:#f92672">+</span> y
+</span></span></code></pre></div><p>Except it is not.</p>
+<p>In Python all functions are uncurried by default.</p>
+<p>In Haskell all functions are curried by default.</p>
+<p>So the functions are not equivalent.
+If we want to write a similar function, we need to write something like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>(x):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(y):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x <span style="color:#f92672">+</span> y
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> f
+</span></span></code></pre></div><p>Now it is equivalent.</p>
+<p>Are you asking &ldquo;why?&rdquo;?</p>
+<p>Well, in Haskell we can write like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">add3</span>       <span style="color:#f92672">=</span> add <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">seven</span>      <span style="color:#f92672">=</span> add3 <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">also_seven</span> <span style="color:#f92672">=</span> add <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">4</span>
+</span></span></code></pre></div><p>Now, since our Python function is curried, we can do this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>add3       <span style="color:#f92672">=</span> add(<span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>seven      <span style="color:#f92672">=</span> add3(<span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>also_seven <span style="color:#f92672">=</span> add(<span style="color:#ae81ff">3</span>)(<span style="color:#ae81ff">4</span>)
+</span></span></code></pre></div><p>What I did just now is called <em>partial application</em>.
+It is when I apply function <em>partially</em>, i.e. I don&rsquo;t give it all the arguments immediately, but do it in steps.
+One of reasons for doing so is:</p>
+<ul>
+<li>Sometimes arguments are not available immediately</li>
+<li>You have a list of arguments that you always pass. You can partially apply those values and create functions that accept only arguments that really matter</li>
+<li>We can now do piping</li>
+</ul>
+<p>Before that, let&rsquo;s get back to our type signatures in Haskell:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">f</span> <span style="color:#f92672">::</span> a <span style="color:#f92672">-&gt;</span> b
+</span></span></code></pre></div><p>This is a generic type signature in Haskell which says that <code>f</code> is a function from type <code>a</code> to type <code>b</code>, i.e. it accepts an argument of type <code>a</code> and the return type is <code>b</code>.</p>
+<p>Now, let&rsquo;s look at this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">g</span> <span style="color:#f92672">::</span> a <span style="color:#f92672">-&gt;</span> b <span style="color:#f92672">-&gt;</span> c
+</span></span></code></pre></div><p>This is another generic functions that accepts two arguments of type <code>a</code> and <code>b</code> and produces type <code>c</code>.</p>
+<p>Now, <code>-&gt;</code> is actually an operator, a function operator.
+There are implicit parentheses placed in the last type signature, let&rsquo;s make them explicit.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">g</span> <span style="color:#f92672">::</span> (a <span style="color:#f92672">-&gt;</span> (b <span style="color:#f92672">-&gt;</span> c))
+</span></span></code></pre></div><p>In fact, <code>-&gt;</code> is right associative.
+Another fact, <code>b -&gt; c</code> is just another type, so this is equivalent to:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> d <span style="color:#f92672">=</span> b <span style="color:#f92672">-&gt;</span> c
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">g</span> <span style="color:#f92672">::</span> a <span style="color:#f92672">-&gt;</span> d
+</span></span></code></pre></div><p>Now, the magic.
+When we have a function of type <code>a -&gt; b</code> and we provide it <code>a</code>, what we get is <code>b</code>.
+So by this logic, if we take <code>a -&gt; d</code> and provide it <code>a</code>, we get <code>d</code>.
+But <code>d</code> is actually <code>b -&gt; c</code>, so we actually get another function.</p>
+<p>So now hopefully you see why we written the Python code that way:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>(x):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(y):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x <span style="color:#f92672">+</span> y
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> f
+</span></span></code></pre></div><p>When we first supply <code>x</code>, we as a result get a new function which now accepts <code>y</code>.
+Once we get both <code>x</code> and <code>y</code>, we can evaluate the result.</p>
+<p>With this we can do piping.
+Let&rsquo;s write out those functions first:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_boys</span>(accounts):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> accounts[<span style="color:#e6db74">&#39;boys&#39;</span>]
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_adults</span>(boys):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> [x <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> boys <span style="color:#66d9ef">if</span> boys[<span style="color:#e6db74">&#39;age&#39;</span>] <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">18</span>]
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">extract_names</span>(boys):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> [x[<span style="color:#e6db74">&#39;name&#39;</span>] <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> boys]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">names_starting_with_a</span>(names):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> [x <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> names <span style="color:#66d9ef">if</span> x<span style="color:#f92672">.</span>startswith(<span style="color:#e6db74">&#39;a&#39;</span>) <span style="color:#f92672">or</span> x<span style="color:#f92672">.</span>startswith(<span style="color:#e6db74">&#39;A&#39;</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">capitalize</span>(names):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> [x<span style="color:#f92672">.</span>upper() <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> names]
+</span></span></code></pre></div><p>This is good.</p>
+<p>Actually, function with one argument can be used in a pipe.
+So let&rsquo;s write a <code>pipe</code> function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pipe</span>(v, l):
+</span></span><span style="display:flex;"><span>  res <span style="color:#f92672">=</span> v
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> l:
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">=</span> f(res)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> res
+</span></span></code></pre></div><p>What we essentially did is create a function that takes the output value of a function and makes it an input for the next function.
+Essentially what <code>pipe</code> function is supposed to do.</p>
+<p>Now, if the functions had to take more arguments, we would be in a bit of a trouble.
+Again, because functions are uncurried by default, the Python would complain that we applied less arguments than we should have.</p>
+<p>Let&rsquo;s make a function that curries other functions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">curry_that</span>(f):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">foo</span>(l):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">bar</span>(x):
+</span></span><span style="display:flex;"><span>      args <span style="color:#f92672">=</span> l <span style="color:#f92672">+</span> [x]
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> f(<span style="color:#f92672">*</span>args)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> bar
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> foo
+</span></span></code></pre></div><p>This is essentially a poor man&rsquo;s <code>curry</code>.</p>
+<p>What we are doing here, is that we are taking a function <code>f</code>, and then stage it to accept arguments in two ways:</p>
+<ul>
+<li>The initial list of arguments, except for the last one</li>
+<li>The last argument</li>
+</ul>
+<p>After all the arguments are passed to the function, it will collect all the arguments into the list, and then expand them using the <code>*</code> operator.</p>
+<p>This is how we would use it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">triple_sum</span>(a, b, c):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> a <span style="color:#f92672">+</span> b <span style="color:#f92672">+</span> c
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>t_sum_curry <span style="color:#f92672">=</span> curry_that(triple_sum)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(pipe(<span style="color:#ae81ff">3</span>, [t_sum_curry([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>])]))
+</span></span></code></pre></div><p>It is a mess, I know.
+But then again, you should use better languages.
+Hopefully, you are starting to see why I don&rsquo;t like Python.</p>
+<p>There are better alternatives in the <code>PyMonad</code> library, like <code>@curry</code> decorator.
+Look up the documentation if you&rsquo;re interested.</p>
+<p>Now, hopefully you understand those tools and they will be useful to you <del>or you finally decided to code in the better programming language</del>.</p>
+<p>We are almost there, I can see the light.</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/so-you-want-to-fp-iii/">
+                <span class="button__icon">←</span>
+                <span class="button__text">So You Want to Functional Programming (Part III)</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/so-you-want-to-fp/">
+                <span class="button__text">So You Want to Functional Programming</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2024 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.js" onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
