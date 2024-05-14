@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Types for Not Lying or How to Talk the Language Compiler Understands :: Terminal</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The fun part of the Internet is that anyone can write some stupid stuff for anyone to read and laugh to their hearts&amp;rsquo; content. I&amp;rsquo;ll try to write something useful, but even if it is a mess, I&amp;rsquo;m not the first, and definitely won&amp;rsquo;t be the last.
+What I want to talk about is the role of the types in our programming lives and how to utilize them for the better and easier life." />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/types-for-not-lying/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/orange.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/orange.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Types for Not Lying or How to Talk the Language Compiler Understands">
+<meta property="og:description" content="The fun part of the Internet is that anyone can write some stupid stuff for anyone to read and laugh to their hearts&amp;rsquo; content. I&amp;rsquo;ll try to write something useful, but even if it is a mess, I&amp;rsquo;m not the first, and definitely won&amp;rsquo;t be the last.
+What I want to talk about is the role of the types in our programming lives and how to utilize them for the better and easier life." />
+<meta property="og:url" content="/posts/types-for-not-lying/" />
+<meta property="og:site_name" content="Terminal" />
+
+  
+    <meta property="og:image" content="/img/favicon/orange.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2024-05-13 20:24:12 &#43;0900 JST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="orange">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Terminal
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="/showcase">Showcase</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about" >About</a></li>
+        
+      
+        
+          <li><a href="/showcase" >Showcase</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/types-for-not-lying/">Types for Not Lying or How to Talk the Language Compiler Understands</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2024-05-13</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>The fun part of the Internet is that anyone can write some stupid stuff for anyone to read and laugh to their hearts&rsquo; content.
+I&rsquo;ll try to write something useful, but even if it is a mess, I&rsquo;m not the first, and definitely won&rsquo;t be the last.</p>
+<p>What I want to talk about is the role of the types in our programming lives and how to utilize them for the better and easier life.</p>
+<p>What we usually know about types is that they&rsquo;re annoying.
+So much so, we are willing to code in languages that don&rsquo;t have types (I&rsquo;m looking at you, dynamic languages).
+And of course, dynamic languages <em>do</em> have types, it&rsquo;s just that the compiler won&rsquo;t check for the type accuracy for you.
+Now it is YOUR responsibility.
+But at the same time, the types are checked at the runtime, over and over and over again, making you lose those precious CPU cycles.
+And also those nominal types are not really compatible with other nominal types, so any misuse of the types results in annoying type errors in runtime.
+Instead of being compile time errors&hellip;</p>
+<p>Yet again, people would still continue to argue about the usability or uselessness of types.
+The funny ones are the ones who would write in Python and then use mypy to ensure type-safety.
+I mean, didn&rsquo;t you start coding in Python, because, well, you <em>didn&rsquo;t</em> have to do type checking?</p>
+<p>But I&rsquo;m being condescending.</p>
+<p>I mean, what are the altnernatives?
+Java?
+C++?
+Golang?</p>
+<p>As a person who recently tried to use Go and make a good use of its capabilities, I kinda feel the annoyance of people who have to use the type system.</p>
+<p>But then again, the problem is that people just don&rsquo;t know about better alternatives (because they don&rsquo;t want to learn, but that is a topic for another day).</p>
+<p>As I&rsquo;m writing this, I&rsquo;m realizing that the gripe I have is not with types, but with the fact that programmers don&rsquo;t really don&rsquo;t know how to talk to their compilers.</p>
+<p>Most people would consider it to be a tool to convert your mess into a machine-code mess, but what if our computers could do more?
+What if our compilers could check not for stupid or mechanical stuff, but some more complicated invariants?</p>
+<p>The thing is, that is possible in functional programming langauges based on ML languages (no, not the Machine Learning kind).
+But the question that bugged me was &ldquo;Why those languages and not others?&rdquo;.</p>
+<p>The thing is, is that it is possible in other langauges, but with much effort, unfortunately.
+It just so happens that ML languages are better suited for it than other languages.</p>
+<p>So, how do we do that?
+How do make the compiler check that:</p>
+<ul>
+<li>functions might not return a value?</li>
+<li>or return different types of values?</li>
+<li>or do something completely unrelated?</li>
+</ul>
+<p>And most importantly, what is the role of types in all of this?</p>
+<h1 id="types-for-the-better-future">Types for the better future<a href="#types-for-the-better-future" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>What are types used for?
+You know, there&rsquo;s something called &ldquo;Type Theory&rdquo; in Mathematics, but I&rsquo;m sure it is pretty unrelated (spoiler: it is related).</p>
+<p>On the other hand, how do compilers ensure that the programs that we write are &ldquo;correct&rdquo;?
+And what does &ldquo;correct&rdquo; even mean?</p>
+<p>Well, those things are already solved by mathematicians.
+&ldquo;Correct&rdquo; means that the program won&rsquo;t go haywire and won&rsquo;t cause runtime errors during its execution.</p>
+<p>And yet, some programs do cause runtime errors, and a whole lot of them.
+Why?</p>
+<p>Well, another question is how do the compilers ensure that the programs are &ldquo;correct&rdquo;? (I know that I asked it already).</p>
+<p>Of course, they use types for that.
+Typecheckers ensure that the types for specific operations match and that somehow is enough.</p>
+<p>This &ldquo;somehow&rdquo; made me think: what is exactly going on when typecheckers check for types?</p>
+<p>The magic lies in Curry-Howard correspondence.
+You should look it up because I won&rsquo;t be able to explain it in all the nuanced details, but the gist is that some smart people (independently) have shown that the propositional logic (if A, then B) corresponds to types (function from A to B) and that if the proof is correct, then the types should match.</p>
+<p>Take a moment to think about it.
+What Curry-Howard correspondence tells us, is that the types are essentially a mathematical proof of some sort.
+So what typecheckers (and by proxy we) do is prove that the programs are correct, using types.
+All the annoying stuff of annotating everying is essentially you writing small proofs.
+That&rsquo;s why computer scientists are essentially a dumbed-down version of mathematicians.
+Every self-respecting software engineer should learn some math.
+A bare minimum.</p>
+<p>If this sounds crazy, well, it is not.
+At least the idea stands, because there are tools, called proof-assistants, that use some of those ideas to prove mathematical statements.
+One that I know for sure is Coq (don&rsquo;t laugh!).
+And it can also generate a 100% working program from the mathematical proof.</p>
+<p>This profound idea opens a possibility of writing, or better yet, structuring programs as a mathematical proofs.
+That is a really difficult thing to do, unless you&rsquo;re using languages made specifically for that (Coq, or those that have dependent types).
+More important and practical takeaway is to use types to expose assumptions made in the code and ask compiler to verify those assumptions for us throughout the codebase.
+I think this is more practical and useful.</p>
+<h1 id="some-hypothetical-examples">Some hypothetical examples<a href="#some-hypothetical-examples" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Let&rsquo;s take a Golang, because that is what I&rsquo;ve been using.
+And let&rsquo;s assume I&rsquo;m writing a compiler, because that&rsquo;s what I&rsquo;ve been doing.</p>
+<p>If you don&rsquo;t know how compilers work, don&rsquo;t worry, it is not so important.
+The basic idea is that compilers (using clever mathematical tricks) convert text into mathematical structures which are easier to work with.
+It so happens that the structure in fact is a tree.
+You know, like binary tree, but only Abstract Syntax Tree.
+Parsers that build the said AST ensure that everything is in specified order, but doesn&rsquo;t check if it makes sense (e.g. &ldquo;I ate love by looking at a cow&rdquo; is a grammatically valid sentence while being a complete nonsense).
+To ensure that the AST represents a valid program that make sense, we need typecheckers.</p>
+<p>There are different ways to represent programming langauges, and how you do that affects how they feel or what they can do.</p>
+<p>For example the program may be a list of statements (or instructions):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Program</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Statements</span> []<span style="color:#a6e22e">Statement</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Example of such language might be a Python or a Bash, where the instructions come one after another to do specific actions.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Statement</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">statementNode</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">String</span>() <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is how the Statement may be defined.
+I was told that <code>statementNode()</code> is a part of duck typing and by providing such method to a struct tells Go compiler that the struct implements a specific interface.</p>
+<p>Statements can be thought as instructions.
+There are also something called expressions.</p>
+<p>The main difference between expressions and statements is that expressions can be <em>evaluated</em> to a value, while statements don&rsquo;t really yield a value.</p>
+<pre tabindex="0"><code>2
+1 + 2
+foo(bar)
+</code></pre><p>Now, imagine this is a C language.
+Is this is a valid C code?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ae81ff">2</span>;
+</span></span></code></pre></div><p>Well, technically yes.
+This is a useless expression, but it is a still valid code.</p>
+<p>Ideally we should be able to put the expression inside the <code>Program.Statements</code>.
+Except, we can&rsquo;t: the types don&rsquo;t match.</p>
+<p>What can we do now then?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ExpressionStatement</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Expression</span> <span style="color:#a6e22e">Expression</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">es</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ExpressionStatement</span>) <span style="color:#a6e22e">statementNode</span>() {}
+</span></span></code></pre></div><p>We created a wrapper type, that wraps an expression, and allows us to put <code>2</code> into the <code>Program.Statements</code>.</p>
+<p>So what about it?</p>
+<p>You may think that you&rsquo;ve made a wrapper type, but no.
+What you did was something more profound: you <em>proved</em> that expression is a statement.
+How did you do that?
+By showing that such type can exist <em>and</em> typecheck along other types without breaking the consistency of the other code.</p>
+<p>Now, take a minute to think about it.
+What you did wasn&rsquo;t just provide a wrapper.
+You mathematically proved things to your compiler.
+And compiler accepted your explanation.</p>
+<p>Types are a language that you can talk to your compiler&rsquo;s proving system.
+But types are not just for compiler&rsquo;s benefit, they also exist there for yours.</p>
+<p>Imagine this:</p>
+<pre tabindex="0"><code>foo.bar
+</code></pre><p>This is an example struct member access, the one you typically see in C-like languages.</p>
+<p>The initial idea was to model it like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MemberAccess</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Name</span> <span style="color:#a6e22e">Ident</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Member</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">ma</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MemberAccess</span>) <span style="color:#a6e22e">expressionNode</span>() {} <span style="color:#75715e">// MemberAccess is an expression
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Ident</span> <span style="color:#66d9ef">struct</span> { <span style="color:#75715e">// Identifier
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">Name</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">id</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Ident</span>) <span style="color:#a6e22e">expressionNode</span>() {} <span style="color:#75715e">// Ident is an expression
+</span></span></span></code></pre></div><p>Of course, seems valid.
+But when I was writing a top-down parser, when trying to parse things, I encountered a small problem:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// parser code above
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">e</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">parseLiteralOrFunctionCallOrSubExpression</span>() <span style="color:#75715e">// parses identifiers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">curTokenIs</span>(<span style="color:#a6e22e">token</span>.<span style="color:#a6e22e">DOT</span>) { <span style="color:#75715e">// this is a part of member access
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">nextToken</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">name</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">parseIdentifier</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">MemberAccess</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Name</span>:   <span style="color:#a6e22e">e</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Member</span>: <span style="color:#a6e22e">name</span>,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is an example code, that you don&rsquo;t have to look too deeply.
+The main takeaway is that the code doesn&rsquo;t compile.
+There is a type-error: <code>Name</code> is of type <code>Ident</code>, but <code>e</code> is of type <code>Expression</code>.</p>
+<p><code>e</code> is of type <code>Expression</code> because I used <code>parseLiteralOrFunctionCallOrSubExpression()</code> method instead of <code>parseIdentifier()</code>.</p>
+<p>I could have done that instead, but I new that it was wrong: what if the function returns a struct?</p>
+<pre tabindex="0"><code>foo(bar).kek
+</code></pre><p>Isn&rsquo;t that a valid code?</p>
+<p>It was clear to me that my understanding of the AST was wrong.
+So now I need to <em>prove</em> things:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MemberAccess</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Struct</span> <span style="color:#a6e22e">Expression</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Member</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is better.
+The second type-error is that the <code>Member</code> is a string, but <code>name</code> is an <code>Ident</code> (or <code>Expression</code>).
+To prove that we can either change the definition:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MemberAccess</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Struct</span> <span style="color:#a6e22e">Expression</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Member</span> <span style="color:#a6e22e">Ident</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// or
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MemberAccess</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Struct</span> <span style="color:#a6e22e">Expression</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Member</span> <span style="color:#a6e22e">Expression</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Or when creating struct, prove that we have all the necessary information to derive our node:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">t</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">parseIdentifier</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">t</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Ident</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>    panic(<span style="color:#e6db74">&#34;Something went horribly wrong&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">MemberAccess</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Name</span>:   <span style="color:#a6e22e">e</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Member</span>: <span style="color:#a6e22e">name</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// or...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span> = <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">parseIdentifier</span>()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">MemberAccess</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Name</span>:   <span style="color:#a6e22e">e</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Member</span>: <span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">String</span>(),
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This would suffice to satisfy the typechecker, but it is clear that something is going (potentially) wrong.
+If we make <code>Member</code> either a <code>Ident</code> or <code>Expression</code>, we introduce unnecessary burden of proof onto a person using our code, since they have to ensure that the things are exactly what they are claiming to be.</p>
+<p>In respect to type-casting or taking <code>String()</code>, we are:</p>
+<ul>
+<li>punching holes in our type system (essentially saying &ldquo;trust me, bro&rdquo;)</li>
+<li>making some <strong>bold</strong> assumptions about the code of <code>parseIdentifier()</code> that exist nowhere except our heads and which compiler is blissfully unaware of</li>
+</ul>
+<p>That&rsquo;s why people don&rsquo;t really see compilers as nothing more than machine-code-translating tools.
+They are not powerful enough to prove some stuff that we really wish we could prove about our code.
+And trying to reach to that level would require some awkward magic.</p>
+<p>But then again, there are things that we can do.
+You probably saw this line:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// code above
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span></code></pre></div><p>What are you doing with this?
+You&rsquo;re essentially saying that something doesn&rsquo;t exist.</p>
+<p>Fair enough.
+But then again, do you <em>always</em> check for <code>nil</code>?
+Probably not, that&rsquo;s why you have <em>invariants</em>, right?</p>
+<p>But then again, when you forget about checking for <code>nil</code>, things go horribly wrong.</p>
+<p>The question is, how to deal with that?</p>
+<p>Well, what if you don&rsquo;t return <code>nil</code> in the first place?</p>
+<p>If you don&rsquo;t return <code>nil</code>, then what do you return?</p>
+<p>Depends on the context.
+For example let&rsquo;s get back to our language.
+Is this a valid expression?</p>
+<pre tabindex="0"><code>()
+</code></pre><p>You might say <code>no</code> and you would probably be right.
+How would that work out?</p>
+<pre tabindex="0"><code>2 + ()
+</code></pre><p>Clearly, this is a problem.
+When parsing the code, we expect some expression inside the parenthesis.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">curTokenIs</span>(<span style="color:#a6e22e">token</span>.<span style="color:#a6e22e">LPAR</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ensuring preconditions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    panic(<span style="color:#e6db74">&#34;Impossible case, not parsing a subexpression&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">nextToken</span>() <span style="color:#75715e">// skipping (
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">curTokenIs</span>(<span style="color:#a6e22e">token</span>.<span style="color:#a6e22e">RPAR</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#960050;background-color:#1e0010">???</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>You can&rsquo;t return <code>nil</code>, because the code that called the function to parse subexpression assumes that the function always succeeds.</p>
+<p>What about this instead?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">EmptyExpression</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">ee</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">EmptyExpression</span>) <span style="color:#a6e22e">expressionNode</span>() {}
+</span></span></code></pre></div><p>And now:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">nextToken</span>() <span style="color:#75715e">// skipping (
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">curTokenIs</span>(<span style="color:#a6e22e">token</span>.<span style="color:#a6e22e">RPAR</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">EmptyExpression</span>{}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Now you&rsquo;re not returning a <code>nil</code> and you function ended successfully.
+While it still doesn&rsquo;t resolve the problem, at least you live another day to hope that this problem gets resolved by somebody else (your language&rsquo;s typechecker).</p>
+<p>At some point, when I made the first prototype of the parser in 1100+ lines of (arguably) bad code, I failed the simplest test:</p>
+<pre tabindex="0"><code>1
+</code></pre><p>While not all of the code that I wrote was bad, I clearly made wrong assumptions and told about wrong assumptions to compiler.
+The problem is that I don&rsquo;t handle newlines and end-of-file nicely.
+To do that, I would need to introduce a state.</p>
+<p>If there&rsquo;s no <code>state == bugs</code>, then you must be extremely smart person.
+For me bookkeeping is extremely difficult, so I try to simplify the process as much as possible.
+Instead of keeping track at which state I&rsquo;m right now, what if the functions returned all the necessary information.</p>
+<p>What I needed, was to say that the functions may fail.
+The current types are saying that the <code>parse()</code> methods will <em>always</em> return a node of the AST.
+But that is not true.</p>
+<p>Since I&rsquo;m coming from functional programming background, I decided to bring friends of my own.
+Enter <code>Options</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">optionExpr</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">has_value</span> <span style="color:#66d9ef">bool</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">value</span>     <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Expression</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>I would wrap the value inside this struct and make functions return <code>optionExpr</code> instead of <code>ast.Expression</code>.</p>
+<p>To create a <code>Some(e)</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">some_of_expr</span>(<span style="color:#a6e22e">e</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Expression</span>) <span style="color:#a6e22e">optionExpr</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">optionExpr</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">has_value</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">value</span>:     <span style="color:#a6e22e">e</span>,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>To create <code>None</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">none_of_expr</span>() <span style="color:#a6e22e">optionExpr</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">optionExpr</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">has_value</span>: <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">value</span>:     <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Nice.
+Now, how does one work with it?
+Checking everytime for <code>if opt.has_value { // ... </code> would quickly become tedious and doesn&rsquo;t solve the underlying problem.
+So we need one more helper function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">bind_of_opt_expr</span>(<span style="color:#a6e22e">e</span> <span style="color:#a6e22e">optionExpr</span>, <span style="color:#a6e22e">f</span> <span style="color:#66d9ef">func</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Expression</span>) <span style="color:#a6e22e">optionExpr</span>) <span style="color:#a6e22e">optionExpr</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">has_value</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">value</span>)
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">e</span> <span style="color:#75715e">// e is None
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This comes from monads, but the idea is that there are some rules that we need to abide by to ensure the type consistency (returning <code>optionExpr</code> is one of them).</p>
+<p>So now, what you would do instead of working with values directly, you would create &ldquo;callbacks&rdquo; that would represent your &ldquo;happy path&rdquo;, where everything works correctly.
+<code>bind_of_opt_expr()</code> ensures that if there is <code>None</code> somewhere along the line, the overall result will become <code>None</code>.</p>
+<p>So now I started to replace the return argument from <code>ast.Expression</code> to <code>optionExpr</code> and once again I started getting type errors.
+But those are good type errors.
+Because now compiler was telling me where I made &ldquo;leaps of logic&rdquo; and where I need to put more legwork to prove the correctness of the code.</p>
+<p>Of course, writing such code in Golang is a bit tedious, because Golang&rsquo;s type system sucks.
+I realize why people don&rsquo;t code in functional style: they don&rsquo;t know languages that are more well suited for that thing.</p>
+<p>At some point I had to have an option of <code>[]ast.Expression</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">optionExprList</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">has_value</span> <span style="color:#66d9ef">bool</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">value</span>     []<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Expression</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">some_of_expr_list</span>(<span style="color:#a6e22e">e</span> []<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Expression</span>) <span style="color:#a6e22e">optionExprList</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">optionExprList</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">has_value</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">value</span>:     <span style="color:#a6e22e">e</span>,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">none_of_expr_list</span>() <span style="color:#a6e22e">optionExprList</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">optionExprList</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">has_value</span>: <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">value</span>:     <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">bind_of_opt_exprlist_ret_exprlist</span>(<span style="color:#a6e22e">e</span> <span style="color:#a6e22e">optionExprList</span>, <span style="color:#a6e22e">f</span> <span style="color:#66d9ef">func</span>([]<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Expression</span>) <span style="color:#a6e22e">optionExprList</span>) <span style="color:#a6e22e">optionExprList</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">has_value</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">value</span>)
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">e</span> <span style="color:#75715e">// e is None
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>At some point I needed a bind that accepts the <code>optionExprList</code> but instead returns <code>optionExpr</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">bind_of_opt_exprlist_ret_expr</span>(<span style="color:#a6e22e">e</span> <span style="color:#a6e22e">optionExprList</span>, <span style="color:#a6e22e">f</span> <span style="color:#66d9ef">func</span>([]<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Expression</span>) <span style="color:#a6e22e">optionExpr</span>) <span style="color:#a6e22e">optionExpr</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">has_value</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">value</span>)
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">none_of_expr</span>()
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>And then I required a bind that accepts <code>optionExpr</code> but returns <code>optionExprList</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">bind_of_opt_expr_ret_exprlist</span>(<span style="color:#a6e22e">e</span> <span style="color:#a6e22e">optionExpr</span>, <span style="color:#a6e22e">f</span> <span style="color:#66d9ef">func</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Expression</span>) <span style="color:#a6e22e">optionExprList</span>) <span style="color:#a6e22e">optionExprList</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">has_value</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">value</span>)
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">none_of_expr_list</span>()
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Of course, it is tedious, not mentioning that you always have to do the <code>return some_of_expr(e)</code> inside the binds.
+But this is an important measure to try to be honest about your code to the compiler and to yourself.
+Instead of waiting for those problems to explode in your face during runtime, you&rsquo;re dealing them during compilation, on a playground where you have arguably more control.</p>
+<p>Hopefully you learned today how you can use compilers to aid you in your development, instead of just building stuff.</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="/posts/so-you-want-to-fp-iii/">
+                <span class="button__text">So You Want to Functional Programming (Part III)</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2024 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.js" onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -6,7 +6,358 @@
     <description>Recent content in Posts on Terminal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 22 Feb 2024 13:51:03 +0900</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 13 May 2024 20:24:12 +0900</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Types for Not Lying or How to Talk the Language Compiler Understands</title>
+      <link>/posts/types-for-not-lying/</link>
+      <pubDate>Mon, 13 May 2024 20:24:12 +0900</pubDate>
+      
+      <guid>/posts/types-for-not-lying/</guid>
+      <description>The fun part of the Internet is that anyone can write some stupid stuff for anyone to read and laugh to their hearts&amp;rsquo; content. I&amp;rsquo;ll try to write something useful, but even if it is a mess, I&amp;rsquo;m not the first, and definitely won&amp;rsquo;t be the last.
+What I want to talk about is the role of the types in our programming lives and how to utilize them for the better and easier life.</description>
+      <content>&lt;p&gt;The fun part of the Internet is that anyone can write some stupid stuff for anyone to read and laugh to their hearts&amp;rsquo; content.
+I&amp;rsquo;ll try to write something useful, but even if it is a mess, I&amp;rsquo;m not the first, and definitely won&amp;rsquo;t be the last.&lt;/p&gt;
+&lt;p&gt;What I want to talk about is the role of the types in our programming lives and how to utilize them for the better and easier life.&lt;/p&gt;
+&lt;p&gt;What we usually know about types is that they&amp;rsquo;re annoying.
+So much so, we are willing to code in languages that don&amp;rsquo;t have types (I&amp;rsquo;m looking at you, dynamic languages).
+And of course, dynamic languages &lt;em&gt;do&lt;/em&gt; have types, it&amp;rsquo;s just that the compiler won&amp;rsquo;t check for the type accuracy for you.
+Now it is YOUR responsibility.
+But at the same time, the types are checked at the runtime, over and over and over again, making you lose those precious CPU cycles.
+And also those nominal types are not really compatible with other nominal types, so any misuse of the types results in annoying type errors in runtime.
+Instead of being compile time errors&amp;hellip;&lt;/p&gt;
+&lt;p&gt;Yet again, people would still continue to argue about the usability or uselessness of types.
+The funny ones are the ones who would write in Python and then use mypy to ensure type-safety.
+I mean, didn&amp;rsquo;t you start coding in Python, because, well, you &lt;em&gt;didn&amp;rsquo;t&lt;/em&gt; have to do type checking?&lt;/p&gt;
+&lt;p&gt;But I&amp;rsquo;m being condescending.&lt;/p&gt;
+&lt;p&gt;I mean, what are the altnernatives?
+Java?
+C++?
+Golang?&lt;/p&gt;
+&lt;p&gt;As a person who recently tried to use Go and make a good use of its capabilities, I kinda feel the annoyance of people who have to use the type system.&lt;/p&gt;
+&lt;p&gt;But then again, the problem is that people just don&amp;rsquo;t know about better alternatives (because they don&amp;rsquo;t want to learn, but that is a topic for another day).&lt;/p&gt;
+&lt;p&gt;As I&amp;rsquo;m writing this, I&amp;rsquo;m realizing that the gripe I have is not with types, but with the fact that programmers don&amp;rsquo;t really don&amp;rsquo;t know how to talk to their compilers.&lt;/p&gt;
+&lt;p&gt;Most people would consider it to be a tool to convert your mess into a machine-code mess, but what if our computers could do more?
+What if our compilers could check not for stupid or mechanical stuff, but some more complicated invariants?&lt;/p&gt;
+&lt;p&gt;The thing is, that is possible in functional programming langauges based on ML languages (no, not the Machine Learning kind).
+But the question that bugged me was &amp;ldquo;Why those languages and not others?&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;The thing is, is that it is possible in other langauges, but with much effort, unfortunately.
+It just so happens that ML languages are better suited for it than other languages.&lt;/p&gt;
+&lt;p&gt;So, how do we do that?
+How do make the compiler check that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;functions might not return a value?&lt;/li&gt;
+&lt;li&gt;or return different types of values?&lt;/li&gt;
+&lt;li&gt;or do something completely unrelated?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And most importantly, what is the role of types in all of this?&lt;/p&gt;
+&lt;h1 id=&#34;types-for-the-better-future&#34;&gt;Types for the better future&lt;/h1&gt;
+&lt;p&gt;What are types used for?
+You know, there&amp;rsquo;s something called &amp;ldquo;Type Theory&amp;rdquo; in Mathematics, but I&amp;rsquo;m sure it is pretty unrelated (spoiler: it is related).&lt;/p&gt;
+&lt;p&gt;On the other hand, how do compilers ensure that the programs that we write are &amp;ldquo;correct&amp;rdquo;?
+And what does &amp;ldquo;correct&amp;rdquo; even mean?&lt;/p&gt;
+&lt;p&gt;Well, those things are already solved by mathematicians.
+&amp;ldquo;Correct&amp;rdquo; means that the program won&amp;rsquo;t go haywire and won&amp;rsquo;t cause runtime errors during its execution.&lt;/p&gt;
+&lt;p&gt;And yet, some programs do cause runtime errors, and a whole lot of them.
+Why?&lt;/p&gt;
+&lt;p&gt;Well, another question is how do the compilers ensure that the programs are &amp;ldquo;correct&amp;rdquo;? (I know that I asked it already).&lt;/p&gt;
+&lt;p&gt;Of course, they use types for that.
+Typecheckers ensure that the types for specific operations match and that somehow is enough.&lt;/p&gt;
+&lt;p&gt;This &amp;ldquo;somehow&amp;rdquo; made me think: what is exactly going on when typecheckers check for types?&lt;/p&gt;
+&lt;p&gt;The magic lies in Curry-Howard correspondence.
+You should look it up because I won&amp;rsquo;t be able to explain it in all the nuanced details, but the gist is that some smart people (independently) have shown that the propositional logic (if A, then B) corresponds to types (function from A to B) and that if the proof is correct, then the types should match.&lt;/p&gt;
+&lt;p&gt;Take a moment to think about it.
+What Curry-Howard correspondence tells us, is that the types are essentially a mathematical proof of some sort.
+So what typecheckers (and by proxy we) do is prove that the programs are correct, using types.
+All the annoying stuff of annotating everying is essentially you writing small proofs.
+That&amp;rsquo;s why computer scientists are essentially a dumbed-down version of mathematicians.
+Every self-respecting software engineer should learn some math.
+A bare minimum.&lt;/p&gt;
+&lt;p&gt;If this sounds crazy, well, it is not.
+At least the idea stands, because there are tools, called proof-assistants, that use some of those ideas to prove mathematical statements.
+One that I know for sure is Coq (don&amp;rsquo;t laugh!).
+And it can also generate a 100% working program from the mathematical proof.&lt;/p&gt;
+&lt;p&gt;This profound idea opens a possibility of writing, or better yet, structuring programs as a mathematical proofs.
+That is a really difficult thing to do, unless you&amp;rsquo;re using languages made specifically for that (Coq, or those that have dependent types).
+More important and practical takeaway is to use types to expose assumptions made in the code and ask compiler to verify those assumptions for us throughout the codebase.
+I think this is more practical and useful.&lt;/p&gt;
+&lt;h1 id=&#34;some-hypothetical-examples&#34;&gt;Some hypothetical examples&lt;/h1&gt;
+&lt;p&gt;Let&amp;rsquo;s take a Golang, because that is what I&amp;rsquo;ve been using.
+And let&amp;rsquo;s assume I&amp;rsquo;m writing a compiler, because that&amp;rsquo;s what I&amp;rsquo;ve been doing.&lt;/p&gt;
+&lt;p&gt;If you don&amp;rsquo;t know how compilers work, don&amp;rsquo;t worry, it is not so important.
+The basic idea is that compilers (using clever mathematical tricks) convert text into mathematical structures which are easier to work with.
+It so happens that the structure in fact is a tree.
+You know, like binary tree, but only Abstract Syntax Tree.
+Parsers that build the said AST ensure that everything is in specified order, but doesn&amp;rsquo;t check if it makes sense (e.g. &amp;ldquo;I ate love by looking at a cow&amp;rdquo; is a grammatically valid sentence while being a complete nonsense).
+To ensure that the AST represents a valid program that make sense, we need typecheckers.&lt;/p&gt;
+&lt;p&gt;There are different ways to represent programming langauges, and how you do that affects how they feel or what they can do.&lt;/p&gt;
+&lt;p&gt;For example the program may be a list of statements (or instructions):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Program&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Statements&lt;/span&gt; []&lt;span style=&#34;color:#a6e22e&#34;&gt;Statement&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Example of such language might be a Python or a Bash, where the instructions come one after another to do specific actions.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Statement&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;statementNode&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;String&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is how the Statement may be defined.
+I was told that &lt;code&gt;statementNode()&lt;/code&gt; is a part of duck typing and by providing such method to a struct tells Go compiler that the struct implements a specific interface.&lt;/p&gt;
+&lt;p&gt;Statements can be thought as instructions.
+There are also something called expressions.&lt;/p&gt;
+&lt;p&gt;The main difference between expressions and statements is that expressions can be &lt;em&gt;evaluated&lt;/em&gt; to a value, while statements don&amp;rsquo;t really yield a value.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2
+1 + 2
+foo(bar)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, imagine this is a C language.
+Is this is a valid C code?&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Well, technically yes.
+This is a useless expression, but it is a still valid code.&lt;/p&gt;
+&lt;p&gt;Ideally we should be able to put the expression inside the &lt;code&gt;Program.Statements&lt;/code&gt;.
+Except, we can&amp;rsquo;t: the types don&amp;rsquo;t match.&lt;/p&gt;
+&lt;p&gt;What can we do now then?&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ExpressionStatement&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;es&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ExpressionStatement&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;statementNode&lt;/span&gt;() {}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We created a wrapper type, that wraps an expression, and allows us to put &lt;code&gt;2&lt;/code&gt; into the &lt;code&gt;Program.Statements&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;So what about it?&lt;/p&gt;
+&lt;p&gt;You may think that you&amp;rsquo;ve made a wrapper type, but no.
+What you did was something more profound: you &lt;em&gt;proved&lt;/em&gt; that expression is a statement.
+How did you do that?
+By showing that such type can exist &lt;em&gt;and&lt;/em&gt; typecheck along other types without breaking the consistency of the other code.&lt;/p&gt;
+&lt;p&gt;Now, take a minute to think about it.
+What you did wasn&amp;rsquo;t just provide a wrapper.
+You mathematically proved things to your compiler.
+And compiler accepted your explanation.&lt;/p&gt;
+&lt;p&gt;Types are a language that you can talk to your compiler&amp;rsquo;s proving system.
+But types are not just for compiler&amp;rsquo;s benefit, they also exist there for yours.&lt;/p&gt;
+&lt;p&gt;Imagine this:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;foo.bar
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is an example struct member access, the one you typically see in C-like languages.&lt;/p&gt;
+&lt;p&gt;The initial idea was to model it like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;MemberAccess&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Ident&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Member&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;ma&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;MemberAccess&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;expressionNode&lt;/span&gt;() {} &lt;span style=&#34;color:#75715e&#34;&gt;// MemberAccess is an expression
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Ident&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; { &lt;span style=&#34;color:#75715e&#34;&gt;// Identifier
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Ident&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;expressionNode&lt;/span&gt;() {} &lt;span style=&#34;color:#75715e&#34;&gt;// Ident is an expression
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Of course, seems valid.
+But when I was writing a top-down parser, when trying to parse things, I encountered a small problem:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// parser code above
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;parseLiteralOrFunctionCallOrSubExpression&lt;/span&gt;() &lt;span style=&#34;color:#75715e&#34;&gt;// parses identifiers
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;curTokenIs&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;token&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;DOT&lt;/span&gt;) { &lt;span style=&#34;color:#75715e&#34;&gt;// this is a part of member access
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;nextToken&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;parseIdentifier&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;MemberAccess&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;:   &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;Member&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is an example code, that you don&amp;rsquo;t have to look too deeply.
+The main takeaway is that the code doesn&amp;rsquo;t compile.
+There is a type-error: &lt;code&gt;Name&lt;/code&gt; is of type &lt;code&gt;Ident&lt;/code&gt;, but &lt;code&gt;e&lt;/code&gt; is of type &lt;code&gt;Expression&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;e&lt;/code&gt; is of type &lt;code&gt;Expression&lt;/code&gt; because I used &lt;code&gt;parseLiteralOrFunctionCallOrSubExpression()&lt;/code&gt; method instead of &lt;code&gt;parseIdentifier()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I could have done that instead, but I new that it was wrong: what if the function returns a struct?&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;foo(bar).kek
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Isn&amp;rsquo;t that a valid code?&lt;/p&gt;
+&lt;p&gt;It was clear to me that my understanding of the AST was wrong.
+So now I need to &lt;em&gt;prove&lt;/em&gt; things:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;MemberAccess&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Member&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is better.
+The second type-error is that the &lt;code&gt;Member&lt;/code&gt; is a string, but &lt;code&gt;name&lt;/code&gt; is an &lt;code&gt;Ident&lt;/code&gt; (or &lt;code&gt;Expression&lt;/code&gt;).
+To prove that we can either change the definition:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;MemberAccess&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Member&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Ident&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// or
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;MemberAccess&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Member&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Or when creating struct, prove that we have all the necessary information to derive our node:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;parseIdentifier&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;ok&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.(&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Ident&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; !&lt;span style=&#34;color:#a6e22e&#34;&gt;ok&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    panic(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Something went horribly wrong&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;MemberAccess&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;:   &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Member&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// or...
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;parseIdentifier&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;MemberAccess&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;:   &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;Member&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;String&lt;/span&gt;(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This would suffice to satisfy the typechecker, but it is clear that something is going (potentially) wrong.
+If we make &lt;code&gt;Member&lt;/code&gt; either a &lt;code&gt;Ident&lt;/code&gt; or &lt;code&gt;Expression&lt;/code&gt;, we introduce unnecessary burden of proof onto a person using our code, since they have to ensure that the things are exactly what they are claiming to be.&lt;/p&gt;
+&lt;p&gt;In respect to type-casting or taking &lt;code&gt;String()&lt;/code&gt;, we are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;punching holes in our type system (essentially saying &amp;ldquo;trust me, bro&amp;rdquo;)&lt;/li&gt;
+&lt;li&gt;making some &lt;strong&gt;bold&lt;/strong&gt; assumptions about the code of &lt;code&gt;parseIdentifier()&lt;/code&gt; that exist nowhere except our heads and which compiler is blissfully unaware of&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;That&amp;rsquo;s why people don&amp;rsquo;t really see compilers as nothing more than machine-code-translating tools.
+They are not powerful enough to prove some stuff that we really wish we could prove about our code.
+And trying to reach to that level would require some awkward magic.&lt;/p&gt;
+&lt;p&gt;But then again, there are things that we can do.
+You probably saw this line:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// code above
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What are you doing with this?
+You&amp;rsquo;re essentially saying that something doesn&amp;rsquo;t exist.&lt;/p&gt;
+&lt;p&gt;Fair enough.
+But then again, do you &lt;em&gt;always&lt;/em&gt; check for &lt;code&gt;nil&lt;/code&gt;?
+Probably not, that&amp;rsquo;s why you have &lt;em&gt;invariants&lt;/em&gt;, right?&lt;/p&gt;
+&lt;p&gt;But then again, when you forget about checking for &lt;code&gt;nil&lt;/code&gt;, things go horribly wrong.&lt;/p&gt;
+&lt;p&gt;The question is, how to deal with that?&lt;/p&gt;
+&lt;p&gt;Well, what if you don&amp;rsquo;t return &lt;code&gt;nil&lt;/code&gt; in the first place?&lt;/p&gt;
+&lt;p&gt;If you don&amp;rsquo;t return &lt;code&gt;nil&lt;/code&gt;, then what do you return?&lt;/p&gt;
+&lt;p&gt;Depends on the context.
+For example let&amp;rsquo;s get back to our language.
+Is this a valid expression?&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;()
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You might say &lt;code&gt;no&lt;/code&gt; and you would probably be right.
+How would that work out?&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2 + ()
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Clearly, this is a problem.
+When parsing the code, we expect some expression inside the parenthesis.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; !&lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;curTokenIs&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;token&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;LPAR&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// ensuring preconditions
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    panic(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Impossible case, not parsing a subexpression&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;nextToken&lt;/span&gt;() &lt;span style=&#34;color:#75715e&#34;&gt;// skipping (
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;curTokenIs&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;token&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RPAR&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;???&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can&amp;rsquo;t return &lt;code&gt;nil&lt;/code&gt;, because the code that called the function to parse subexpression assumes that the function always succeeds.&lt;/p&gt;
+&lt;p&gt;What about this instead?&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;EmptyExpression&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;ee&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;EmptyExpression&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;expressionNode&lt;/span&gt;() {}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And now:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;nextToken&lt;/span&gt;() &lt;span style=&#34;color:#75715e&#34;&gt;// skipping (
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;curTokenIs&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;token&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;RPAR&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;EmptyExpression&lt;/span&gt;{}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now you&amp;rsquo;re not returning a &lt;code&gt;nil&lt;/code&gt; and you function ended successfully.
+While it still doesn&amp;rsquo;t resolve the problem, at least you live another day to hope that this problem gets resolved by somebody else (your language&amp;rsquo;s typechecker).&lt;/p&gt;
+&lt;p&gt;At some point, when I made the first prototype of the parser in 1100+ lines of (arguably) bad code, I failed the simplest test:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;While not all of the code that I wrote was bad, I clearly made wrong assumptions and told about wrong assumptions to compiler.
+The problem is that I don&amp;rsquo;t handle newlines and end-of-file nicely.
+To do that, I would need to introduce a state.&lt;/p&gt;
+&lt;p&gt;If there&amp;rsquo;s no &lt;code&gt;state == bugs&lt;/code&gt;, then you must be extremely smart person.
+For me bookkeeping is extremely difficult, so I try to simplify the process as much as possible.
+Instead of keeping track at which state I&amp;rsquo;m right now, what if the functions returned all the necessary information.&lt;/p&gt;
+&lt;p&gt;What I needed, was to say that the functions may fail.
+The current types are saying that the &lt;code&gt;parse()&lt;/code&gt; methods will &lt;em&gt;always&lt;/em&gt; return a node of the AST.
+But that is not true.&lt;/p&gt;
+&lt;p&gt;Since I&amp;rsquo;m coming from functional programming background, I decided to bring friends of my own.
+Enter &lt;code&gt;Options&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;has_value&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;     &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I would wrap the value inside this struct and make functions return &lt;code&gt;optionExpr&lt;/code&gt; instead of &lt;code&gt;ast.Expression&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To create a &lt;code&gt;Some(e)&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;some_of_expr&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;has_value&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;:     &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To create &lt;code&gt;None&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;none_of_expr&lt;/span&gt;() &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;has_value&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;:     &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nice.
+Now, how does one work with it?
+Checking everytime for &lt;code&gt;if opt.has_value { // ... &lt;/code&gt; would quickly become tedious and doesn&amp;rsquo;t solve the underlying problem.
+So we need one more helper function:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bind_of_opt_expr&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;f&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;has_value&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;f&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;// e is None
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This comes from monads, but the idea is that there are some rules that we need to abide by to ensure the type consistency (returning &lt;code&gt;optionExpr&lt;/code&gt; is one of them).&lt;/p&gt;
+&lt;p&gt;So now, what you would do instead of working with values directly, you would create &amp;ldquo;callbacks&amp;rdquo; that would represent your &amp;ldquo;happy path&amp;rdquo;, where everything works correctly.
+&lt;code&gt;bind_of_opt_expr()&lt;/code&gt; ensures that if there is &lt;code&gt;None&lt;/code&gt; somewhere along the line, the overall result will become &lt;code&gt;None&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;So now I started to replace the return argument from &lt;code&gt;ast.Expression&lt;/code&gt; to &lt;code&gt;optionExpr&lt;/code&gt; and once again I started getting type errors.
+But those are good type errors.
+Because now compiler was telling me where I made &amp;ldquo;leaps of logic&amp;rdquo; and where I need to put more legwork to prove the correctness of the code.&lt;/p&gt;
+&lt;p&gt;Of course, writing such code in Golang is a bit tedious, because Golang&amp;rsquo;s type system sucks.
+I realize why people don&amp;rsquo;t code in functional style: they don&amp;rsquo;t know languages that are more well suited for that thing.&lt;/p&gt;
+&lt;p&gt;At some point I had to have an option of &lt;code&gt;[]ast.Expression&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;has_value&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;     []&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;some_of_expr_list&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; []&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;has_value&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;:     &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;none_of_expr_list&lt;/span&gt;() &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;has_value&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;:     &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bind_of_opt_exprlist_ret_exprlist&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;f&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;([]&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;has_value&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;f&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;// e is None
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;At some point I needed a bind that accepts the &lt;code&gt;optionExprList&lt;/code&gt; but instead returns &lt;code&gt;optionExpr&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bind_of_opt_exprlist_ret_expr&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;f&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;([]&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;has_value&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;f&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;none_of_expr&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And then I required a bind that accepts &lt;code&gt;optionExpr&lt;/code&gt; but returns &lt;code&gt;optionExprList&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bind_of_opt_expr_ret_exprlist&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExpr&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;f&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ast&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Expression&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;optionExprList&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;has_value&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;f&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;none_of_expr_list&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Of course, it is tedious, not mentioning that you always have to do the &lt;code&gt;return some_of_expr(e)&lt;/code&gt; inside the binds.
+But this is an important measure to try to be honest about your code to the compiler and to yourself.
+Instead of waiting for those problems to explode in your face during runtime, you&amp;rsquo;re dealing them during compilation, on a playground where you have arguably more control.&lt;/p&gt;
+&lt;p&gt;Hopefully you learned today how you can use compilers to aid you in your development, instead of just building stuff.&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>So You Want to Functional Programming (Part III)</title>
       <link>/posts/so-you-want-to-fp-iii/</link>
