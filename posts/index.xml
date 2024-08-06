@@ -6,7 +6,81 @@
     <description>Recent content in Posts on Terminal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 13 May 2024 20:24:12 +0900</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 06 Aug 2024 23:34:20 +0900</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>All You Need Is A Wordbank</title>
+      <link>/posts/all-you-need-is-wordbank/</link>
+      <pubDate>Tue, 06 Aug 2024 23:34:20 +0900</pubDate>
+      
+      <guid>/posts/all-you-need-is-wordbank/</guid>
+      <description>It is funny, how interesting ideas come to us from unexpected places. While I am in Japan, I really struggle to speak in Kazakh. For some reason while I&amp;rsquo;m away from my home, I don&amp;rsquo;t seem to have a command of the language I was trying to learn for almost half of my life. Yet, the Japanese seems to be coming to me way easier&amp;hellip; Yet again, I noticed that I actually talk in Kazakh way better, when the person I am talking to is also Kazakh.</description>
+      <content>&lt;p&gt;It is funny, how interesting ideas come to us from unexpected places.
+While I am in Japan, I really struggle to speak in Kazakh.
+For some reason while I&amp;rsquo;m away from my home, I don&amp;rsquo;t seem to have a command of the language I was trying to learn for almost half of my life.
+Yet, the Japanese seems to be coming to me way easier&amp;hellip;
+Yet again, I noticed that I actually talk in Kazakh way better, when the person I am talking to is also Kazakh.
+Somehow my thoughts become expressed in another language, and my fingers already type away at it before I can say &amp;ldquo;What the hell is going on?&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;The idea came to me when I noticed that I was typing to her in Kazakh, or what seemed like Kazakh, but was actually my attempt at going at it with only a Russian alphabet.
+Kazakh language has more sounds than the Russian language, so there are some letters that are missing, so we go about substituting for similar sounds, with an intermittent success.
+Every self-respecting Kazakh person types with an &lt;code&gt;Official Standardized Kazakh Layout™&lt;/code&gt;.
+I guess I don&amp;rsquo;t respect myself nearly enough.&lt;/p&gt;
+&lt;p&gt;The problem with Kazakh language layout is that it&amp;rsquo;s bad.
+Utterly bad.
+You must sacrifice your sanity to use it on a regular basis, and be on something to defend it from crititicism.
+I have seen many examples where the programming was supposed to make our lives better, yet we actually become slaves to it.&lt;/p&gt;
+&lt;p&gt;So the idea is embarrasingly simple: take the words that are written with Russian letters, and substitute some of them for Kazakh letters to end up with a Kazakh word.
+It&amp;rsquo;s like IME for Japanese (e.g. Anthy), but WAY simpler.&lt;/p&gt;
+&lt;p&gt;The problem?
+I don&amp;rsquo;t know how to code it.
+While the core of the algorithm is really easy, I have problems with building the interface.
+I wanted to intergrate it with the display server, but I am too stupid at the moment.&lt;/p&gt;
+&lt;p&gt;So I created a small browser extension instead.
+It is utterly bad.
+But as a proof-of-concept, it works quite nicely.
+It is exactly what I expected it to be.
+Now I just need to make it work on every website and iron out bugs.
+Probably will do it in the next year.
+But this is not what I want to talk about.&lt;/p&gt;
+&lt;p&gt;As I said, the algorithm is very simple.
+The problem is that it obviously depends on a Kazakh language dictionary.
+The bigger problem is that I can&amp;rsquo;t find the dictionary anywhere.&lt;/p&gt;
+&lt;p&gt;If you know Japanese language dictionaries, there are tons of them, and yet they are all the same.
+That&amp;rsquo;s because they use the same database.
+And by database I mean a file with all the words and meta-information necessary.&lt;/p&gt;
+&lt;p&gt;I can&amp;rsquo;t find anything similar in Kazakh language.&lt;/p&gt;
+&lt;p&gt;Okay, so all we need is a wordbank, right?
+Yeah.
+Since I am young adult that is trying to solve all the problems by himself, even when I should probably ask for help or advice, the next obvious thing would be trying to build it myself.&lt;/p&gt;
+&lt;p&gt;Now, you remember how I said that I don&amp;rsquo;t have a command of Kazakh language?
+Yeah, it&amp;rsquo;s difficult.
+There are many nuances I don&amp;rsquo;t know about Kazakh language.
+So because of that, I am most likely not making the database.
+At least not now.&lt;/p&gt;
+&lt;p&gt;Now, the whole point why I wanted to write this post:
+having a word database would be actually really-really useful.&lt;/p&gt;
+&lt;p&gt;One of the things that I came up with is a new IME for Kazakh language, but there&amp;rsquo;s more.&lt;/p&gt;
+&lt;p&gt;We could have a nice dictionary, like TAKABOTO, on Android, for free (as in freedom of speech AND free beer).
+This would make Kazakh language practically at your fingertips.
+One can add a nice fuzzy search and an IME for Kazakh layout, and you could actually allow people to make anki flashcards, or even have preset ankis for differing levels of difficulty.&lt;/p&gt;
+&lt;p&gt;Another useful thing we could have: an extension that allows to translate the selected Kazakh word on a webpage.
+Just like Yomitan!&lt;/p&gt;
+&lt;p&gt;Third, we could have more alternatives for websites such as &lt;a href=&#34;sozdik.kz&#34;&gt;Sozdik.kz&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Fourth, just having a database by itself is nice.
+One can do a datamining, or a research.&lt;/p&gt;
+&lt;p&gt;Those are just some ideas that I came up with.
+But very interesting observation is that all of them help with the preservation of the Kazakh language.
+The problem is not that less people speak Kazakh language, I don&amp;rsquo;t think that&amp;rsquo;s the case.
+The problem is that less people know how to speak &lt;em&gt;proper&lt;/em&gt; Kazakh language.
+With all those small ideas we can:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;help preserve the state of the Kazakh language&lt;/li&gt;
+&lt;li&gt;make it more accessible for general kazakh population&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The most funny thing, however, is that all of them depend on one thing: having a solid wordbank (or database).
+So if you have ideas on how to build one such, I am all ears.&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>Types for Not Lying or How to Talk the Language Compiler Understands</title>
       <link>/posts/types-for-not-lying/</link>
